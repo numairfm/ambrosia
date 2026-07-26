@@ -69,10 +69,16 @@ ${toolMapping}
   return {
     config: async (config) => {
       const skillsDir = path.join(__dirname, '../../skills');
+      const commandsDir = path.join(__dirname, '../../commands');
       if (!config.skills) config.skills = {};
       if (!config.skills.paths) config.skills.paths = [];
       if (!config.skills.paths.includes(skillsDir)) {
         config.skills.paths.push(skillsDir);
+      }
+      if (!config.commands) config.commands = {};
+      if (!config.commands.paths) config.commands.paths = [];
+      if (!config.commands.paths.includes(commandsDir)) {
+        config.commands.paths.push(commandsDir);
       }
       return config;
     },
