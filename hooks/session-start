@@ -26,12 +26,9 @@ session_context="<EXTREMELY_IMPORTANT>\nYou have Ambrosia active.\n\n**Below is 
 if [ -n "${CURSOR_PLUGIN_ROOT:-}" ]; then
   # Cursor Agent format (snake_case)
   printf '{\n  "additional_context": "%s"\n}\n' "$session_context" | cat
-elif [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
-  # Claude Code format (nested hookSpecificOutput)
-  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$session_context" | cat
 else
-  # Antigravity / Copilot CLI / Generic SDK standard format
-  printf '{\n  "additionalContext": "%s"\n}\n' "$session_context" | cat
+  # Antigravity CLI / Claude Code / Generic SDK format
+  printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  },\n  "additionalContext": "%s"\n}\n' "$session_context" "$session_context" | cat
 fi
 
 exit 0

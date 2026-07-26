@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/session-start\"",
+            "command": "bash -c 'SCRIPT_DIR=\"$(cd \"$(dirname \"$0\")\" 2>/dev/null && pwd)\"; PLUGIN_ROOT=\"${CLAUDE_PLUGIN_ROOT:-${CURSOR_PLUGIN_ROOT:-$SCRIPT_DIR/..}}\"; bash \"$PLUGIN_ROOT/hooks/session-start\"'",
             "shell": "bash",
             "async": false
           }
