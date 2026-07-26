@@ -42,8 +42,8 @@ Do NOT claim anything is complete until failures are resolved.
 ```
 
 Classify failures:
-- **Related failures** (same root cause, same subsystem) → handle together
-- **Independent failures** (different subsystems, disjoint files) → invoke `handoff` to fix in parallel, then re-run verify
+- **Related failures** (same root cause, same subsystem) → handle together via `debug`
+- **Independent failures** (different subsystems, disjoint files) → invoke `debug` for each; `debug`'s own pre-flight determines whether those failures are `handoff`-eligible for parallel dispatch
 
 **If tests pass:** continue to Step 2.
 
