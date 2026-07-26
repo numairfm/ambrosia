@@ -62,6 +62,7 @@ Issue ALL dispatch calls in this single response. Each subagent:
 After all subagents return:
 
 1. **Read each report file.** Don't trust the one-line summary alone for integration decisions.
+1a. **Empty report check.** If any report file is missing, empty, or whitespace-only: treat that subagent as BLOCKED regardless of the status it returned. Do not integrate its changes. Surface to user: "Subagent <label> returned empty output — treating as BLOCKED."
 2. **Conflict check.** Verify the changes don't conflict: overlapping lines, contradictory interfaces, incompatible assumptions. If conflict found: surface to user before merging anything.
 3. **Run the full test suite.** Evidence before integration claims.
 4. **Handle statuses:**
@@ -78,7 +79,7 @@ After all subagents return:
 
 ## Timeout behavior
 
-If a dispatched subagent has not returned after 5 minutes of wall-clock time, note it in the next response and ask the user whether to wait or abort that item.
+Agent harnesses cannot pause mid-turn to poll a wall clock. If a dispatched subagent has not returned by the time the coordinator's next response begins: note it and ask the user — "Subagent <label> has not returned. Wait, or abort and re-dispatch?" Do not auto-continue past a missing result.
 
 ## Context isolation invariant
 
