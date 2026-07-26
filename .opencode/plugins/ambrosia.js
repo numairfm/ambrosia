@@ -70,15 +70,26 @@ ${toolMapping}
     config: async (config) => {
       const skillsDir = path.join(__dirname, '../../skills');
       const commandsDir = path.join(__dirname, '../../commands');
+
+      if (!config.command) config.command = {};
+      try {
+        if (fs.existsSync(commandsDir)) {
+          for (const file of fs.readdirSync(commandsDir).filter((f) => f.endsWith('.md'))) {
+            const name = path.basename(file, '.md');
+            const content = fs.readFileSync(path.join(commandsDir, file), 'utf8');
+            const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
+            if (match) {
+              const description = match[1].match(/description:\s*(.+)/)?.[1]?.trim();
+              config.command[name] = { description, template: match[2].trim() };
+            }
+          }
+        }
+      } catch (e) {}
+
       if (!config.skills) config.skills = {};
       if (!config.skills.paths) config.skills.paths = [];
       if (!config.skills.paths.includes(skillsDir)) {
         config.skills.paths.push(skillsDir);
-      }
-      if (!config.commands) config.commands = {};
-      if (!config.commands.paths) config.commands.paths = [];
-      if (!config.commands.paths.includes(commandsDir)) {
-        config.commands.paths.push(commandsDir);
       }
       return config;
     },
