@@ -103,7 +103,11 @@ AGENTS.md is missing:
 Add these to AGENTS.md? (y/n)
 ```
 
-If AGENTS.md doesn't exist: suggest running `init` first.
+If AGENTS.md doesn't exist: create a minimal stub now —
+  ```bash
+  echo "# AGENTS.md\n# Add your test command, build command, and project constraints here." > AGENTS.md
+  ```
+  Then prompt: "AGENTS.md created. Fill in test/build commands before continuing."
 
 ---
 
