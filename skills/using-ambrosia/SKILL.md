@@ -5,94 +5,60 @@ description: Ambrosia suite introduction, orientation, and session bootstrap. Re
 
 # Ambrosia
 
-A self-contained AI coding skill suite. Structurally inspired by obra/superpowers, mattpocock/skills, UditAkhourii/adhd, and open-gsd/gsd-core — dependent on none of them.
+A self-contained, high-performance AI coding skill suite. Built for context-rot resistance, maximum execution speed, and token efficiency.
 
-**Core guarantees:**
-- Context rot resistance via fresh-context subagents at every phase + a persistent append-only log
-- Real parallelism via same-turn concurrent dispatch (not sequential workarounds)
-- YAGNI by default — ponytail-style leanness baked into every build phase
-- Harness-agnostic — works on Antigravity, OpenCode, Claude Code, Codex, Cursor, and anything that reads SKILL.md files
+**Core Guarantees:**
+- Context rot resistance (fresh-context subagents + append-only `ambrosia.log.md`)
+- Real parallelism (same-turn concurrent subagent dispatch)
+- YAGNI by default (ponytail-style leanness built into every phase)
+- Harness-agnostic (Antigravity, Claude Code, OpenCode, Codex, Cursor, etc.)
 
 ---
 
 ## Skill Index
 
-| Skill | Type | When to use |
+| Skill | Type | Trigger / Purpose |
 |---|---|---|
-| `orient` | User-invoked | Before any work in an unfamiliar codebase — maps structure and patterns |
-| `audit` | User-invoked | Before planning — refine and gap-check a raw idea or prompt |
-| `plan` | Spine | After audit — decompose into a concrete task plan |
-| `build` | Spine | After plan — TDD execution with fresh subagents |
-| `verify` | Spine | After build — confirm work is actually done, evidence-based |
-| `debug` | User-invoked | When something is broken — systematic root cause process |
-| `diverge` | User/model-invoked | Open-ended design, naming, architecture, or fuzzy debugging |
-| `handoff` | Model-invoked | Called by build/verify/debug — never call directly |
-| `review` | User-invoked | Standalone code review on any diff — before PR, after refactor, any time |
-| `trim` | User-invoked | After verify — cut over-engineering from the diff or full repo |
-| `debt` | User-invoked | Harvest ponytail: comments into a tracked debt ledger |
-| `wrap-up` | Spine | When all tasks are verified clean — close out the branch |
+| `orient` | Tool | Map codebase architecture, conventions, and entry points |
+| `audit` | Tool | Refine and gap-check raw task prompts before planning |
+| `plan` | Spine | Decompose audited tasks into concrete, file-mapped implementation plans |
+| `build` | Spine | Execute plans via TDD using fresh, isolated subagents |
+| `verify` | Spine | Confirm work completion with empirical evidence (tests + diff) |
+| `debug` | Tool | Systematic, hypothesis-driven bug fixing |
+| `diverge` | Tool | Multi-frame design, naming, and architectural ideation |
+| `review` | Tool | Standalone code review on diffs |
+| `trim` | Tool | Audit & strip over-engineering from diffs or whole repo |
+| `debt` | Tool | Harvest and track `// ponytail:` technical debt markers |
+| `wrap-up` | Spine | Close out branch cleanly (merge, PR, park, or rollback) |
+| `handoff` | System | Concurrent subagent dispatch mechanism (model-invoked) |
 
-**Standard pipeline:**
-```
-[orient] → audit → plan → build → verify → [debug if failures] → [review] → trim → wrap-up
-```
+**Standard Pipeline:** `[orient] → audit → plan → build → verify → [debug] → [trim] → wrap-up`
 
-**Quick calls (no pipeline):**
-- Questions, explanations, lookups → just answer directly
-- Single specific changes ("fix this typo", "rename this var") → do it directly
-- Ambrosia only activates the pipeline for multi-step build/design work
+**Direct Execution:** Questions, single-file bugfixes, or small edits bypass the pipeline and run directly.
 
 ---
 
 ## Standing Behavioral Orders
 
-These are active for the entire session once Ambrosia is loaded. No invocation needed.
+Active for all sessions once Ambrosia is loaded:
 
-**AGENTS.md:** If `AGENTS.md` exists at the project root, read it before doing anything. It contains project-specific instructions that override Ambrosia defaults.
-
-**ADHD STRUCTURED RESPONSES (Always-On Communication Style):** 
-Communicate using clean, ADHD-friendly structure. 
-- Lead with the direct conclusion or decision.
-- Use clear scannable headers (`###`), concise bullet points, and markdown tables for comparisons.
-- Explicitly highlight trade-offs, potential traps, or edge-case risks in dedicated callouts.
-- Keep prose concise and eliminate fluff, pleasantries, or redundant restatements.
-
-**LITE-DIVERGE:** Before responding to any open-ended design, naming, or architecture question, silently run 3-frame divergent ideation internally. Surface only the top result unless asked for more. Skip for canonical lookups or specific bug fixes. Full `diverge` pass runs on demand or high stakes.
-
-**PONYTAIL LEANNESS (Always-On YAGNI & Debt Check):**
-Embrace the lazy senior dev mindset. Before writing or reviewing any code:
-- Does it need to exist at all (YAGNI)?
-- Does the standard library or platform do it natively?
-- Can it be one clean line instead of a multi-class abstraction?
-- Run a silent Ponytail check on every task diff. Mark deliberate shortcuts with `// ponytail: <what was simplified> | ceiling: <limit> | upgrade: <trigger>`.
-
-**WEB SEARCH GROUNDING:** Any claim about an external API, library version, current behavior, or third-party system must be verified with a web search before being stated as fact or built upon. Use whatever search tool this harness provides. Show the source. If web search is unavailable: flag the claim as `[UNVERIFIED — no search tool]` and continue. Never build on unverified external claims as if they were facts.
-
-**MODE DETECTION (silent, before every response):**
-- QUESTION → phrases like "what does", "how does", "explain", "where is", "why does" → answer directly, no pipeline
-- SMALL TASK → single specific already-clear change → do it directly, no pipeline
-- TASK/GOAL → building, planning, multi-step work → route through pipeline
-
-**PREREQUISITE ENFORCEMENT:** Each spine skill checks `ambrosia.log.md` for the expected prior state before running. If the prior state is missing, it stops and tells you what to run first. Pass `--force` to override.
-
-**LOG SECURITY:** Never write raw credential strings, tokens, API keys, or private key material to `ambrosia.log.md`. Redact or omit sensitive values. `wrap-up` will scan the log for sensitive patterns before any push.
+1. **AGENTS.md First:** Read `AGENTS.md` at root if present. Project rules override defaults.
+2. **ADHD Structure:** Direct decisions first. Use header anchors (`###`), scannable bullet points, and trade-off tables. Zero fluff.
+3. **Lite-Diverge:** Silently evaluate 3 alternatives internally before answering open-ended design/architecture questions. Surface only the top choice unless asked.
+4. **Ponytail Leanness (YAGNI):** Prefer native stdlib/platform solutions over new abstractions. Tag deliberate shortcuts with `// ponytail: <what was simplified> | ceiling: <limit> | upgrade: <trigger>`.
+5. **Web Search Grounding:** Verify external API/library assumptions before building. Mark unverified claims as `[UNVERIFIED]`.
+6. **Fast-Path Routing:** Mode check before executing:
+   - **Question/Lookup** → Answer directly
+   - **Small Single-File Task** → Fix directly + test
+   - **Multi-Step Goal/Feature** → Pipeline (`audit` → `plan` → `build` → `verify`)
+7. **Prerequisite Enforcement:** Spine skills check `ambrosia.log.md` state. Pass `--force` to bypass.
+8. **Log Security:** Omit/redact credentials, tokens, or keys in `ambrosia.log.md`.
 
 ---
 
-## Session & Project Bootstrap
+## Bootstrap & State
 
-Ambrosia requires **no separate initialization command**. 
+- `.ambrosia/` (`plans/`, `specs/`, `ambrosia.log.md`) auto-initializes on first skill run.
+- Stating a new project goal automatically triggers `audit`.
+- If `.ambrosia/PARKED.md` exists, prompt to resume the parked session immediately.
 
-When starting a project or introducing an idea:
-1. If `.ambrosia/` does not exist, the first active Ambrosia skill will automatically create `.ambrosia/plans`, `.ambrosia/specs`, and `ambrosia.log.md` silently.
-2. If you state a new idea or project goal (e.g. *"use Ambrosia to build X"* or *"init this project with Ambrosia"*), it immediately routes into **`audit`**, which kicks off the interactive questioning & prompt sharpening flow.
-3. If `PARKED.md` exists in `.ambrosia/`: a previous session was parked mid-work. Read it immediately and offer to resume.
-
----
-
-## Design Principles
-
-- Skill names are plain and literal — personality lives in the suite name, not the skill names
-- Mandatory spine stays lean — low ceremony, not five-command ceremony
-- The only places real extra cost is deliberately spent: `diverge` (gated) and `handoff` (condition-gated)
-- Everything Ambrosia creates for itself lives in `.ambrosia/` — nothing bleeds into your project structure

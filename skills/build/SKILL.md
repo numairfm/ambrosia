@@ -64,77 +64,45 @@ Store this — `wrap-up` needs it for the final review package.
 
 Repeat for each task in the plan:
 
-### 1. Select model tier
+### 1. Select model tier for task subagent
 
 | Task complexity | Model |
 |---|---|
-| 1-2 files, complete spec with exact code | Cheapest available |
-| Multi-file, integration concerns | Standard/mid tier |
-| Design judgment, broad codebase understanding | Most capable |
+| 1-2 files, complete spec with exact code | Cheap tier |
+| Multi-file, integration concerns | Mid tier |
+| Design judgment, broad codebase understanding | Capable tier |
 | Fix-loop rounds 4-5 (escalation) | One tier above stuck implementer |
 
-Always specify the model explicitly when dispatching. An omitted model inherits the session default — often the most capable and most expensive.
+Always specify the model explicitly when dispatching.
+
+---
 
 ### 2. Dispatch implementer subagent
 
 Construct a work ticket containing ONLY:
-- One line on where this task fits in the project
-- The task's full text from the plan (the only source of requirements — never summarize)
-- Interfaces and decisions from earlier tasks this task consumes
-- The report file path: `.ambrosia/build/task-<N>-report.md`
-- The test command and build command
-- Global Constraints from the plan
-
-Record BASE (`git rev-parse HEAD`) before dispatching.
-
-**Never paste accumulated prior-task summaries.** A fresh subagent needs its task, the interfaces it touches, and the global constraints. Nothing else.
-
-The implementer:
-1. Writes the failing test (RED)
-2. Runs it — confirms it fails with the expected error
-3. Writes minimal implementation (GREEN)
-4. Runs — confirms it passes
-5. Refactors if needed, re-runs
-6. Self-reviews: no unrequested abstractions, no avoidable dependencies
-7. Commits: `ambrosia(task-N): <description>`
-8. Returns: status, commits, one-line test summary, concerns
-
-**Parallel-safe tasks:** if the plan marks 2+ tasks as `parallel-safe` and they are adjacent in the queue, invoke `handoff` to dispatch them concurrently. Continue with sequential tasks after integration.
-
-### 3. Handle the report
-
-| Status | Action |
-|---|---|
-| DONE | Run per-task ponytail check, then dispatch reviewer |
-| DONE_WITH_CONCERNS | Read concerns; if correctness-related, address before review |
-| NEEDS_CONTEXT | Provide missing context, re-dispatch |
-| BLOCKED | Assess: context problem → more context + re-dispatch; reasoning problem → more capable model; task too large → break it down; plan wrong → escalate to user |
-
-### 4. Per-task ponytail check
-
-Before review, silently check the task's diff for over-engineering. One line per finding maximum. Append to report: "Ponytail: [finding]". Do not block — flag only.
-
-### 5. Review the task
-
-Dispatch a reviewer subagent with:
-- The task brief (from plan)
-- The report file
-- The diff: `git diff BASE HEAD` — pass as a file, never inline
+- Task position & full task text from plan
+- Consumed/produced interfaces
+- Report file path: `.ambrosia/build/task-<N>-report.md`
+- Test command & build command
 - Global Constraints
 
-The reviewer checks: spec compliance AND code quality. Both required. Implementer self-review never replaces the task reviewer.
+Record BASE (`git rev-parse HEAD`) before dispatch.
 
-**Review verdicts:** Spec ✅ and quality approved → complete the task. Spec ❌ or Critical/Important finding → enter the fix loop.
+The implementer performs strict TDD (RED → GREEN → REFACTOR), commits `ambrosia(task-N): <desc>`, and writes `.ambrosia/build/task-<N>-report.md`.
 
-### 6. Fix loop (if needed)
+---
 
-Maximum 5 rounds per task:
-- **Rounds 1-3:** resume the original implementer with the findings verbatim
-- **Rounds 4-5:** fresh implementer, one tier more capable, with full findings
+### 3. Handle report & Mandatory Independent Task Review
 
-After each round: dispatch a scoped re-reviewer on the fix diff only.
+Implementer self-review NEVER replaces the task reviewer. Every task gets an independent reviewer subagent.
 
-At round 5 cap with open findings: adjudicate — park with ruling, or STOP if load-bearing.
+1. **Ponytail Check:** Perform a silent 1-line over-engineering check on the diff (`git diff BASE HEAD`).
+2. **Dispatch Reviewer Subagent:** Hand the reviewer the task brief, the implementer's report, the diff file (`git diff BASE HEAD`), and project global constraints.
+3. **Verdicts:**
+   - **Spec ✅ & Quality Approved:** Complete the task.
+   - **Spec ❌ or Critical/Important Issue:** Enter fix loop (Max 5 rounds; Rounds 1-3: resume implementer; Rounds 4-5: fresh implementer + model upgrade). Scoped re-review on fix diff.
+
+
 
 ### 7. Complete the task
 

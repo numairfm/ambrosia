@@ -64,7 +64,7 @@ If the build fails but tests pass: still a failure. Report both.
 
 ## Step 3 — Plan compliance check
 
-Read the plan. For each requirement, confirm it exists in the built code:
+Read the plan. For each requirement, confirm it exists in the built code at a specific file and line location:
 
 ```
 Plan compliance:
@@ -73,9 +73,7 @@ Plan compliance:
   ❌ Task 3: <requirement> — NOT FOUND
 ```
 
-A requirement is verified only when you can point to the file and line that implements it. "Tests pass, phase complete" is not verification.
-
-If gaps found: treat as failures. Route to `debug` or fix directly depending on scope.
+A requirement is verified only when you can point to the file and line that implements it. "Tests pass, phase complete" is NOT verification.
 
 ---
 
@@ -86,16 +84,12 @@ If and only if:
 - Build succeeds
 - Every plan requirement verified at a specific file:line
 
-Then stamp the checkpoint:
-
-```bash
-git rev-parse HEAD
-```
-
 Append to `ambrosia.log.md`:
 ```
 <timestamp> [verify] clean — checkpoint: <commit-hash> — <N>/<N> requirements verified
 ```
+
+
 
 This commit hash is the rollback target if anything goes wrong in later steps.
 

@@ -53,47 +53,24 @@ For each finding, classify with a tag:
 
 ---
 
-## Step 2 — Output the cut list
+## Step 2 — Output cut list & Confirmation Gate
 
-**REPORT ONLY. Change nothing yet.**
-
-Format — one line per finding, ranked by estimated impact (biggest cut first):
-
-```
-<tag>  <what to cut>. <replacement or reason>. [path:line]
-```
-
-End with:
-```
-Net removable: ~<N> lines, <M> dependencies
-```
+Format findings ranked by estimated impact (`<tag> <what to cut> [path:line]`).
 
 If nothing to cut:
 ```
-Lean already. Nothing to cut.
+Lean already. Zero cuts identified.
+```
+Append `[trim] clean` to `ambrosia.log.md` and complete automatically.
+
+If cuts exist, present the cut list and prompt for single-turn confirmation:
+```
+Review cut list above.
+Reply 'confirm' or 'confirm 1,3' to apply, or 'skip' to cancel.
 ```
 
----
+Do NOT modify files until confirmation is received.
 
-## Step 3 — Hard confirmation gate
-
-**This is an iron law. Do not skip.**
-
-After outputting the cut list, stop completely and wait.
-
-Present:
-```
-Review the cut list above.
-
-To apply all cuts:     type `confirm all`
-To apply specific cuts: type `confirm 1,3,5` (by line number)
-To skip:               type `skip` or just continue with something else
-
-Making no changes until you confirm.
-```
-
-**Do NOT apply any cuts until the exact confirmation is received.**
-**Do NOT interpret "yeah looks good" or "go ahead" as confirmation — require the explicit word `confirm`.**
 
 ---
 

@@ -5,13 +5,15 @@ description: Parallel divergent ideation for open-ended design, naming, architec
 
 # Diverge
 
-Stop picking the textbook answer. The first three answers the model gives are the answers a senior engineer would give in thirty seconds. Correct. Forgettable. The interesting answers live past number three. This skill walks there.
+Explore alternative designs, naming, architectures, or debugging hypotheses before committing to one path.
 
-`$ARGUMENTS` — the question or problem to explore.
+**Two Tiers:**
+- **Lite-Diverge (Default/Inline):** Silently brainstorm 3 distinct options internally. Surface only the top recommended option with a 1-sentence trade-off summary.
+- **Full-Diverge (`diverge --full`):** Execute a complete 3-frame divergent matrix across architectural, UX, and operational axes.
 
 ---
 
-## Pre-flight
+## Process (Full-Diverge)
 
 **Step 1 — Explicit invocation check.**
 

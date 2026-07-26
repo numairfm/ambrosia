@@ -40,19 +40,14 @@ Before dispatching, append to `ambrosia.log.md`:
 
 ### Step 2 — Construct work tickets
 
-For each item, construct a work ticket containing ONLY what that subagent needs:
-- The specific task/bug/failure description
-- The relevant file paths it will touch
-- Interfaces it consumes from prior work (exact signatures)
-- The report file path it should write to: `.ambrosia/handoff-<item-label>-report.md`
-- Global constraints from `AGENTS.md` and the plan
-- A clear contract: what status to return (DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED)
+For each item, construct a minimal work ticket:
+- Specific task/bug description & exact target file paths
+- Consumed interfaces & report path (`.ambrosia/handoff-<label>-report.md`)
+- Reference `AGENTS.md` rules (do not paste verbatim context)
+- Clear contract: return status (`DONE` / `DONE_WITH_CONCERNS` / `NEEDS_CONTEXT` / `BLOCKED`)
 
-**Never include:**
-- Session history or conversation context
-- Other items' details
-- Accumulated prior-task summaries
-- Anything the subagent doesn't need for its specific item
+Omit session history, past summaries, or details of other parallel tasks.
+
 
 ### Step 3 — Dispatch in parallel
 

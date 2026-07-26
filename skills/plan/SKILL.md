@@ -30,16 +30,16 @@ I'll plan the first one. Suggest: [list subsystems in build order].
 
 ---
 
-## Step 1 — Research (fresh subagent)
+## Step 1 — Research (Inline or Subagent)
 
-Dispatch one research subagent with a clean context window. Give it:
-- The task description (from audit output or direct prompt)
-- Relevant file paths to read (from AGENTS.md or codebase scan)
-- Specific questions to answer: existing patterns, interfaces to respect, constraints
+**Inline Research (Fast-Path):**
+If the task touches ≤ 3 files and the relevant code context is already loaded in the session, perform research **directly inline** in the coordinator context. Skip spawning a subagent.
 
-The research subagent writes its findings to `.ambrosia/specs/<YYYY-MM-DD>-<slug>-research.md` and returns a summary.
+**Subagent Research (Broad/Complex):**
+If the task touches > 3 files or requires deep exploration of unread directories, dispatch one research subagent with a clean context window. Have it write findings to `.ambrosia/specs/<YYYY-MM-DD>-<slug>-research.md`.
 
-**Never have the research subagent touch source files or propose implementations.**
+Never have research modify source files.
+
 
 ---
 
