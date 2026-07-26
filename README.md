@@ -1,20 +1,24 @@
-# 🍇 Ambrosia
+# Ambrosia
 
-> **The All-in-One Autonomous AI Coding Skill Suite**  
-> *Built for context-rot resistance, strict TDD discipline, real parallel dispatch, and zero-friction natural language execution.*
+Self-contained AI software engineering framework and skill suite designed to eliminate context rot, enforce Test-Driven Development (TDD), and execute parallel multi-agent workflows across LLM harnesses.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Harness: Multi-Platform](https://img.shields.io/badge/Harness-Antigravity%20%7C%20Claude%20Code%20%7C%20OpenCode%20%7C%20Cursor%20%7C%20Gemini-blue)](https://github.com/numairfm/ambrosia)
-
-Ambrosia is a self-contained, high-performance AI software engineering framework. It bridges the gap between **implementation discipline** (Superpowers), **context-rot resistance** (GSD), and **cognitive role-framing** (GStack) into a single unified skill suite.
+Ambrosia operates natively in **Antigravity**, **Claude Code**, **OpenCode**, **Cursor**, **Gemini CLI**, **Codex**, and any environment supporting `SKILL.md` configurations.
 
 ---
 
-## 🚀 Quick Start (30 Seconds)
+## Technical Overview
 
-### 1. Installation
+Ambrosia unifies core software engineering disciplines into a structured pipeline. Rather than relying on unstructured chat prompts or monolithic single-agent loops, it enforces:
 
-Install natively across your favorite AI agent CLI or IDE harness:
+1. **Context Isolation:** The main coordinator session coordinates tasks but does not edit source files directly. Implementation is delegated to fresh, single-task subagents to keep context windows clean.
+2. **Empirical Verification:** Completion claims require fresh test suite execution and line-by-line plan compliance checks.
+3. **Structured Pipeline Gating:** Execution state persists in `.ambrosia/ambrosia.log.md`, enforcing stage prerequisites (`orient` -> `audit` -> `plan` -> `build` -> `verify` -> `wrap-up`).
+
+---
+
+## Quick Start
+
+### Installation
 
 ```bash
 # Antigravity CLI
@@ -33,65 +37,66 @@ gemini extensions install https://github.com/numairfm/ambrosia
 /add-plugin https://github.com/numairfm/ambrosia
 ```
 
-### 2. High-Autonomy Execution (`ship`)
+### High-Autonomy Execution (`ship`)
 
-Want to build a full feature without manual micromanagement? Just say:
+To execute a feature end-to-end through the full pipeline with minimal manual intervention:
 
 ```bash
-ship "Add Redis-backed rate limiting middleware with burst unit tests"
+ship "Add Redis rate limiting middleware with unit tests"
 ```
 
-Ambrosia will automatically:
-1. **Audit & Gap-Check** your prompt (`audit`).
-2. **Decompose** into a file-mapped TDD plan (`plan`).
-3. **Execute** RED → GREEN → REFACTOR tasks using isolated subagents (`build`).
-4. **Verify** with fresh test runs & line-by-line plan checks (`verify`).
-5. **Present** final integration choices (`wrap-up`).
+The `ship` skill automatically executes:
+1. `audit` — Gap-checks the prompt and formulates default assumptions.
+2. `plan` — Decomposes the task into RED -> GREEN -> REFACTOR subtasks.
+3. `build` — Dispatches worker subagents to write failing tests, pass them, and submit to an independent reviewer subagent.
+4. `verify` — Runs the complete test suite and verifies line-by-line implementation against the plan.
+5. `wrap-up` — Presents final integration choices (merge, pull request, park, or rollback).
 
 ---
 
-## ⚖️ Why Ambrosia? (Architectural Comparison)
+## Comparison with Existing Frameworks
 
-Most AI coding tools focus on only one piece of the software delivery lifecycle. Ambrosia unifies them into a cohesive, production-ready framework:
+Ambrosia bridges the specific functional gaps found across individual tooling approaches:
 
-| Feature / Capability | Superpowers | GSD (Get Shit Done) | GStack | **Ambrosia 🍇** |
-|---|:---:|:---:|:---:|:---:|
-| **Spec-First & Strict TDD** | ✅ Core | ✅ | ✅ | **✅ Core (`build` & `verify`)** |
-| **Context-Rot Resistance** | ❌ | ✅ Core | Partial | **✅ Core (`context` & `log`)** |
-| **True Concurrent Subagents** | ❌ (Single-agent) | Partial | ❌ (Personas only) | **✅ Real Same-Turn Parallelism (`handoff`)** |
-| **Design & Architectural Ideation** | ❌ | ❌ | ❌ | **✅ Divergent 5-Frame Matrix (`diverge`)** |
-| **YAGNI & Over-Engineering Removal** | ❌ | ❌ | ❌ | **✅ Auditable Cut Engine (`trim`)** |
-| **Technical Debt Ledger** | ❌ | ❌ | ❌ | **✅ Ponytail Debt Tracking (`debt`)** |
-| **Branch & PR Lifecycle Management** | ❌ | Partial | Partial | **✅ Full Wrap-up Menu (`wrap-up`)** |
-| **Zero-Friction Natural Language** | Partial (CLI flags) | Partial | ✅ Slash commands | **✅ Semantic Intent Auto-Routing** |
-| **High-Autonomy One-Shot Pipeline** | ❌ | ❌ | `/office-hours` | **✅ `ship <task>`** |
+| Feature / Metric | Superpowers | GSD (Get Shit Done) | GStack | Ambrosia |
+|---|---|---|---|---|
+| **Primary Focus** | TDD & Plan Discipline | Context Rot & Memory Files | Role-Based Persona Gearing | Unified SDLC & Parallel Execution |
+| **Execution Model** | Single Agent | Sub-agent Waves | Persona Framing | Isolated Worker Subagents + Coordinator |
+| **Parallel Dispatch** | No | Partial | No | Yes (Same-turn `handoff` primitive) |
+| **Exploratory Ideation** | No | No | No | Yes (Multi-frame `diverge` matrix) |
+| **YAGNI / Debt Audit** | No | No | No | Yes (`trim` engine & `debt` ledger) |
+| **State Persistence** | Transient | Markdown Specs | Terminal State | Portable `.ambrosia/ambrosia.log.md` |
+| **Natural Language Routing** | CLI Flags | Command Files | Slash Commands | Natural Intent & Semantic Matching |
 
 ---
 
-## 🔄 The SDLC Pipeline Architecture
+## Pipeline Architecture
 
-Ambrosia relies on a portable, append-only spine (`.ambrosia/ambrosia.log.md`) to enforce clean stage gating across any LLM harness:
+The execution pipeline follows a strict, sequential flow supported by standalone tools and system primitives:
 
 ```mermaid
 flowchart TD
-    A[orient<br><i>Map Codebase & Arch Audit</i>] --> B[audit<br><i>Gap-Check & Formulate Defaults</i>]
-    B --> C[plan<br><i>File-Mapped TDD Decomposition</i>]
-    C --> D[build<br><i>Isolated Subagents + TDD</i>]
-    D --> E[verify<br><i>Evidence-Based Test & Line Checks</i>]
-    E -->|Tests Pass| F[wrap-up<br><i>Merge / PR / Park / Rollback</i>]
-    E -->|Tests Fail| G[debug<br><i>Auto-Triage Root Cause</i>]
+    A[orient<br>Codebase Map & Arch Check] --> B[audit<br>Prompt Gap-Check]
+    B --> C[plan<br>File-Mapped TDD Decomposition]
+    C --> D[build<br>Subagent TDD Execution]
+    D --> E[verify<br>Empirical Test Verification]
+    E -->|Pass| F[wrap-up<br>Merge / PR / Park / Rollback]
+    E -->|Fail| G[debug<br>Auto-Triage & Isolation]
     G --> D
 
-    subgraph Fast-Track & Tools
-        H[ship<br><i>Autonomous Full-Pipeline</i>] -.-> A
-        I[context<br><i>Session Compression & Resume</i>]
-        J[diverge<br><i>Multi-Frame Ideation</i>]
-        K[trim<br><i>YAGNI Over-Engineering Audit</i>]
-        L[debt<br><i>Harvest ponytail: Comments</i>]
+    subgraph Autonomous Acceleration
+        H[ship<br>Full Pipeline Execution] -.-> A
     end
 
-    subgraph Concurrency Primitive
-        M[handoff<br><i>Same-Turn Parallel Dispatch</i>]
+    subgraph Session & Ideation Tools
+        I[context<br>Session Compression]
+        J[diverge<br>Multi-Frame Ideation]
+        K[trim<br>Over-Engineering Audit]
+        L[debt<br>Harvest ponytail: Debt]
+    end
+
+    subgraph Concurrency System
+        M[handoff<br>Same-Turn Subagent Dispatch]
     end
     D <--> M
     G <--> M
@@ -99,83 +104,57 @@ flowchart TD
 
 ---
 
-## 🛠️ The Skill Suite (14 Skills at a Glance)
+## Skill Reference (14 Skills)
 
-Ambrosia organizes 14 focused, non-overlapping skills divided into **Spine (Pipeline)**, **Tools**, **Meta**, and **System** primitives:
+### Spine (Pipeline Execution)
+* **`plan`**: Decomposes tasks into atomic RED -> GREEN -> REFACTOR implementation tasks with exact file locations and interface definitions.
+* **`build`**: Executes plans using isolated subagents. Enforces strict TDD and dispatches an independent reviewer subagent for every task.
+* **`verify`**: Enforces the empirical verification rule. Runs the test suite and verifies each plan requirement at a specific `file:line`.
+* **`wrap-up`**: Handles branch integration. Runs tests, checks technical debt, prompts for YAGNI trimming, scans for sensitive tokens, and presents local merge, pull request, park, or rollback options.
 
-### 📍 Spine Skills (SDLC Execution Core)
-- **`plan`**: Decomposes audited tasks into concrete RED → GREEN → REFACTOR tasks with exact file boundaries and interface contracts.
-- **`build`**: Executes plans with isolated subagents under strict TDD rules. Enforces the **Coordinator-Never-Edits Invariant** and runs mandatory independent task code reviews.
-- **`verify`**: Empirical completion check. Enforces the **Iron Law:** *No completion claims without fresh verification evidence.* Verifies every requirement at a specific `file:line`.
-- **`wrap-up`**: Closes out branches cleanly. Runs tests, auto-checks technical debt, prompts for YAGNI trimming, checks for leaked API secrets, and presents an interactive menu (Merge locally, Push PR, Park, or Rollback).
+### Tools
+* **`orient`**: Scans and maps codebases. Supports `orient` (full map to `.ambrosia/orient.md`), `orient <path>` (scoped module scan), and `orient audit` (high-bar architectural audit to `.ambrosia/architecture.md`).
+* **`audit`**: Interrogates raw prompts, rates clarity, formulates default assumptions for minor gaps, and tags parallel-safe tasks.
+* **`debug`**: 4-phase root-cause debugging engine (Reproduce -> Isolate -> Hypothesize -> Fix). Includes automatic failure triage when invoked without a stack trace.
+* **`diverge`**: Multi-frame ideation tool. Runs isolated cognitive frames (*Regulator*, *Compiler*, *Archaeologist*, *Hardware*) in parallel to evaluate complex architectural decisions without anchoring bias.
+* **`review`**: Standalone code reviewer for diffs or commit ranges. Matches natural focus goals (e.g., security, performance).
+* **`trim`**: YAGNI auditor. Identifies dead code, reinvented standard library routines, and unnecessary abstractions. Hard two-step gate: reports findings first, applies cuts only on explicit approval.
+* **`debt`**: Greps repository for `// ponytail: <what> | ceiling: <limit> | upgrade: <trigger>` comments and outputs a tracked technical debt ledger.
+* **`context`**: Session compression tool. Writes current status, completed tasks, and blockers to `.ambrosia/context.md` and generates a clean resume prompt for switching context windows.
 
-### 🧰 Specialized Tool Skills
-- **`orient`**: Codebase mapping and architectural health checks. Supports 3 modes:
-  - `orient`: Full codebase structural map (`.ambrosia/orient.md`).
-  - `orient <path>`: Scoped module/directory scan (e.g. `orient src/auth`).
-  - `orient audit` / *"audit architecture"*: Multi-frame architectural audit (`.ambrosia/architecture.md`) with clean pass rules.
-- **`audit`**: Prompt engineer before planning. Interrogates raw requests, scores clarity (0–10), formulates sensible defaults, and tags parallel-safe tasks.
-- **`debug`**: Systematic 4-phase root-cause debugging (Reproduce → Isolate → Hypothesize → Fix). Features **Auto-Triage** (auto-detects failures when prompt is empty or routed from `verify`).
-- **`diverge`**: Parallel multi-frame ideation for open-ended design, naming, or fuzzy architecture questions.
-  - **Lite Mode (Default/Auto):** Silently brainstorms 3 angles internally when open-ended design questions are asked.
-  - **Full Mode (5-Frame Matrix):** Triggers on high-stakes choices or natural intensity signals (*"brainstorm to the max"*, *"intensely"*, *"explore every angle"*).
-- **`review`**: Standalone, independent code review for branch diffs, staged changes, or specific files. Accepts natural target matching and focus instructions (e.g. *"review src/auth.ts focusing on security"*).
-- **`trim`**: YAGNI auditor. Audits changes or full repos for dead code, reinvented standard library routines, and unnecessary abstractions. Hard 2-step gate: reports first, cuts only on explicit user approval.
-- **`debt`**: Harvests and tracks `// ponytail: <what> | ceiling: <limit> | upgrade: <trigger>` technical debt markers into a clean, auditable ledger.
-- **`context`**: Context-rot shield. Compresses current session state into `.ambrosia/context.md` and generates a clean, ready-to-paste **Resume Prompt** for switching to fresh terminal windows without losing progress.
-
-### ⚡ Meta & System Primitives
-- **`ship`**: High-autonomy pipeline accelerator. Executes `audit → plan → build → verify → wrap-up` in one continuous turn.
-- **`handoff`**: Model-invoked concurrency primitive. Dispatches multiple independent subagents in the exact same response turn for true parallel execution.
+### Meta & System
+* **`ship`**: Full pipeline accelerator. Executes `audit -> plan -> build -> verify -> wrap-up` in one continuous session.
+* **`handoff`**: System-level concurrency primitive. Dispatches multiple subagents in the same response turn for true parallel execution.
 
 ---
 
-## 🔒 Standing Behavioral Invariants
+## Core Invariants
 
-Once Ambrosia is active, the following core invariants govern all agent behavior:
-
-> [!IMPORTANT]
-> 1. **Coordinator-Never-Edits:** The coordinator agent session NEVER edits source code directly during `build`. All changes route through isolated worker subagents to keep coordinator context pristine and enforce code review loops.
-> 2. **Verification Before Completion:** No task or feature is marked complete based on verbal claims or past runs. Fresh test execution with 0 failures is strictly required.
-> 3. **Root Cause Before Fixes:** `debug` must isolate data flow and form an explicit hypothesis before applying code changes. Symptom-patching is prohibited.
-> 4. **YAGNI & Ponytail Tagging:** Native stdlib/platform solutions take precedence over new third-party dependencies. Deliberate shortcuts must be tagged with `// ponytail:`.
+1. **Coordinator Invariant:** The main coordinator session never edits source files directly during `build`. All modifications must be made by worker subagents.
+2. **Verification Invariant:** No completion claims are valid without fresh test execution output showing zero failures.
+3. **Root Cause Invariant:** Fixes must be preceded by an explicit hypothesis and data flow isolation in `debug`.
+4. **YAGNI Invariant:** Platform primitives and standard library functions must be preferred over new abstractions or dependencies.
 
 ---
 
-## 💡 Practical Workflows & Examples
+## Lineage and Conceptual Sources
 
-### Example 1: Full-Pipeline Feature Shipping
-```bash
-# 1. Start with ship for high autonomy
-ship "Add OAuth2 Google login flow with JWT cookie management"
+Ambrosia is a synthesis of concepts from several open-source agent frameworks:
 
-# 2. Ambrosia audits, plans, dispatches subagents in parallel, verifies tests,
-#    and prompts you with the final wrap-up menu.
-```
-
-### Example 2: Architectural Health Check & Automated Fix
-```bash
-# 1. Run a high-bar architectural audit
-orient audit
-
-# 2. If issues are written to .ambrosia/architecture.md, turn them into a plan
-plan .ambrosia/architecture.md
-
-# 3. Build the fixes
-build
-```
-
-### Example 3: Context-Rot Shield for Long Sessions
-```bash
-# 1. When session gets long or you're switching terminals:
-context
-
-# 2. Copy the generated Resume Prompt, open a new session, and paste!
-# The new session reads .ambrosia/context.md and resumes immediately.
-```
+* **[obra/superpowers](https://github.com/obra/superpowers):** Provides the core methodology backbone—strict TDD discipline (RED -> GREEN -> REFACTOR), task-level subagent isolation, file-mapped implementation plans, and independent review gates.
+* **[uditakhourii/adhd](https://github.com/uditakhourii/adhd):** Provides the foundation for the `diverge` skill. It uses isolated cognitive frames (*Hardware*, *Compiler*, *Regulator*, *Archaeologist*) running in parallel to prevent anchoring bias during design decisions.
+* **[open-gsd/gsd-core](https://github.com/open-gsd/gsd-core):** Provides the context-rot defense model. Inspires Ambrosia's `.ambrosia/` workspace directory, coordinator context compression, append-only log spine (`ambrosia.log.md`), and session resume snapshots (`context`).
+* **[mattpocock/skills](https://github.com/mattpocock/skills):** Inspires the skill configuration standard (`SKILL.md`), parameter passing conventions, and clear separation between model-invoked primitives (`handoff`) and user-facing tools.
+* **[safishamsi/ponytail](https://github.com/safishamsi/ponytail):** Provides the YAGNI auditing principles used by `trim` and `debt`, introducing the structured `// ponytail:` comment format for tracking deliberate technical debt.
 
 ---
 
-## 🛡️ License
+## Development Note
 
-Released under the [MIT License](LICENSE). Built for developers and AI pair-programmers who value software engineering discipline, performance, and context cleanliness.
+This codebase and documentation were developed using AI agent pair-programming workflows ("vibe coding"). While the development process was AI-assisted, the suite enforces deterministic state logging, strict TDD gates, isolated subagent contexts, and empirical test verification to ensure reliability and correctness in real-world software projects.
+
+---
+
+## License
+
+[MIT License](LICENSE)
