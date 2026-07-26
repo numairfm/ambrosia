@@ -1,8 +1,0 @@
-[
-  {
-    "id": "game-5-minecraft-threejs",
-    "name": "Level 5: 3D Minecraft Clone (Three.js)",
-    "category": "Ultra Game (3D Engine & Voxel World)",
-    "prompt": "Build a 3D Minecraft voxel clone in HTML/JS using Three.js. Requirements: 3D voxel grid world generation (grass, dirt, stone, wood tiles/textures via canvas procedural textures or data URIs), PointerLock Controls (first-person camera look + WASD movement + space jump + gravity collision against blocks), block breaking (left click) and block placement (right click with selected block type in hotbar), crosshair UI, and basic sky/lighting."
-  }
-]

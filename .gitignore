@@ -1,9 +1,8 @@
 # Ambrosia session files & local data
 .ambrosia/
 
-# Testbench scratch data
-testbench/scratch/
-testbench/dashboard/benchmark-data.json
+# Testbench directory
+testbench/
 
 # OS & Editor files
 .DS_Store
