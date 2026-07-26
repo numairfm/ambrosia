@@ -60,6 +60,19 @@ Store this — `wrap-up` needs it for the final review package.
 
 ---
 
+## Pause command
+
+If the user types `pause` at any point during the task loop:
+- Finish the **current task only** — do not start the next one
+- Commit and log normally
+- Append to `ambrosia.log.md`: `<timestamp> [build] paused — completed through task-<N>, <M> tasks remaining`
+- Post to chat: "Build paused after Task <N>. <M> tasks remain. Resume with `build --resume` or type `go` to continue."
+- Stop. Do not proceed to the next task.
+
+This is distinct from `wrap-up`'s park option — pause is mid-build; park is end-of-branch.
+
+---
+
 ## Task Loop
 
 Repeat for each task in the plan:
@@ -96,7 +109,8 @@ The implementer performs strict TDD (RED → GREEN → REFACTOR), commits `ambro
 
 Implementer self-review NEVER replaces the task reviewer. Every task gets an independent reviewer subagent.
 
-1. **Ponytail Check:** Perform a silent 1-line over-engineering check on the diff (`git diff BASE HEAD`).
+1. **Empty report check.** If the report file (`.ambrosia/build/task-<N>-report.md`) is missing, empty (0 bytes), or contains only whitespace: treat this as an implementer failure. Do NOT proceed to review. Re-dispatch the implementer once. If the re-dispatch also returns empty: enter the fix loop at round 2 with a fresh implementer.
+2. **Ponytail Check:** Perform a silent 1-line over-engineering check on the diff (`git diff BASE HEAD`).
 2. **Dispatch Reviewer Subagent:** Hand the reviewer the task brief, the implementer's report, the diff file (`git diff BASE HEAD`), and project global constraints.
 3. **Verdicts:**
    - **Spec ✅ & Quality Approved:** Complete the task.
@@ -104,11 +118,54 @@ Implementer self-review NEVER replaces the task reviewer. Every task gets an ind
 
 
 
+### 4. Fix loop (if required)
+
+If the reviewer flagged Spec ❌ or Critical/Important Issue:
+- **Rounds 1-3:** Resume the same implementer subagent with the scoped fix diff + reviewer's exact findings
+- **Rounds 4-5:** Fresh implementer subagent, model upgraded one tier above the stuck implementer
+- Each round: scoped re-review on the fix diff only (not the full task diff)
+- After round 5 still failing → proceed to Step 5
+
+### 5. Fix-loop exhaustion escalation
+
+STOP the task loop. Do not proceed to the next task. Post to chat:
+
+```
+Fix loop exhausted on Task <N> after 5 rounds.
+
+Failure history:
+  Round 1: <one-line summary>
+  Round 2: <one-line summary>
+  Round 3: <one-line summary>
+  Round 4: <one-line summary>
+  Round 5: <one-line summary>
+
+What next?
+  1. Invoke `debug` — root-cause investigation before retrying
+  2. Invoke `diverge` — explore alternative approaches to this task
+  3. Skip this task and continue with remaining plan tasks
+  4. Abort build — roll back to last clean checkpoint
+
+Recommended: 1. Invoke `debug` — fix-loop exhaustion usually signals a misunderstood root cause.
+Proceeding with option 1. Say the number to override.
+```
+
+### 6. Post-fix verification
+
+After any fix loop round succeeds (reviewer approves):
+- Run the full test suite once to confirm no regressions introduced by the fix
+- If regressions found: treat as a new review failure, enter fix loop again (round counter does NOT reset)
+
 ### 7. Complete the task
 
 Append to `ambrosia.log.md`:
 ```
 <timestamp> [build] task-<N> complete — commits <base7>..<head7>
+```
+
+**Ping:** Post to chat:
+```
+✓ Task <N>/<total> — <one-line description of what was built> — commits <base7>..<head7>
 ```
 
 ### 8. Coordinator compression (every 3 tasks)
