@@ -13,9 +13,9 @@ Close out this unit of work cleanly.
 
 ## Pre-flight
 
-**1. Prerequisite check.** Read `ambrosia.log.md`. If no `[verify] clean` entry exists AND `--force` was not passed:
+**1. Prerequisite check.** Read `ambrosia.log.md`. If no `[verify] clean` entry exists AND `force` (or `--force`) was not passed:
 ```
-No clean verify found. Run `verify` first to confirm work is complete, or pass --force to skip.
+No clean verify found. Run `verify` first to confirm work is complete, or say `wrap-up force` to skip.
 ```
 
 **2. Read checkpoint.** Find the last `checkpoint: <hash>` entry in `ambrosia.log.md`. This is the rollback target if needed.

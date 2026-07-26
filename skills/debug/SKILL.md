@@ -7,13 +7,12 @@ description: "Systematic root cause debugging. Four-phase process: reproduce, is
 
 **Iron law:** Find the root cause before proposing any fix. Symptom fixes are failure.
 
-```
-NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
-```
-
----
-
 ## Pre-flight
+
+**0. Auto-Triage Check.** If `$ARGUMENTS` is empty, vague ("something's broken"), or routed automatically from `verify`:
+- Run the full test suite (`npm test` / `cargo test` / `pytest` / `go test ./...`)
+- Inspect recent changes: `git log --oneline -10` and `git diff HEAD~3..HEAD --stat`
+- Identify concrete failure candidates, present a 1-turn triage summary, and proceed directly to Phase 1 on the failing component. Zero manual mode switches required.
 
 **1. Triage incoming bugs.** If multiple bugs or failures are reported, classify them:
 - Same root cause → handle together

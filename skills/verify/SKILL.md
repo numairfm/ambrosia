@@ -17,9 +17,9 @@ If you haven't run the verification command in this message, you cannot claim it
 
 ## Pre-flight
 
-**1. Prerequisite check.** Read `ambrosia.log.md`. If no `[build]` entry exists AND `--force` was not passed:
+**1. Prerequisite check.** Read `ambrosia.log.md`. If no `[build]` entry exists AND `force` (or `--force`) was not passed:
 ```
-No build found. Run `build` first, or pass --force to verify against existing code.
+No build found. Run `build` first, or say `verify force` to verify against existing code.
 ```
 
 **2. Read the plan.** Load the plan file from `.ambrosia/plans/`. This is the ground truth for what was supposed to be built.
@@ -112,10 +112,10 @@ Ready for `trim` and `wrap-up`.
 ```
 Verify failed.
   Tests: <N> failing
-  [list failures]
+  [list exact failures with file:line and stack trace summary]
   Plan gaps: [list missing requirements]
 
-Run `debug` to address failures, or fix directly if straightforward.
+Automatically hand off exact failure context to `debug` for root cause investigation.
 ```
 
 ---

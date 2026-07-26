@@ -9,7 +9,7 @@ Explore alternative designs, naming, architectures, or debugging hypotheses befo
 
 **Two Tiers:**
 - **Lite-Diverge (Default/Inline):** Silently brainstorm 3 distinct options internally. Surface only the top recommended option with a 1-sentence trade-off summary.
-- **Full-Diverge (`diverge --full`):** Execute a complete 3-frame divergent matrix across architectural, UX, and operational axes.
+- **Full-Diverge (`diverge full`):** Execute a complete 3-frame divergent matrix across architectural, UX, and operational axes.
 
 ---
 
@@ -30,14 +30,12 @@ Ask three questions. If the answer to ANY is no, ABORT and answer directly.
 If all three pass: proceed to mode selection.
 If any fails: answer directly. Optionally append: *"For wider exploration under parallel cognitive frames, say `diverge <your problem>`."*
 
-**Step 3 — Mode selection.**
+**Step 3 — Intent Detection & Mode Selection.**
 
-| Signal | Mode |
-|---|---|
-| Explicit `/diverge` or "full diverge" | Full (5 frames) |
-| High-stakes: architecture, product API, real product name | Full (5 frames) |
-| "quick diverge", "light brainstorm", lower-stakes design call | Lite (3 frames) |
-| Auto-triggered (self-judge passed) | Lite (3 frames) |
+Analyze the user's prompt for **semantic intensity**:
+
+- **Full Mode (5 Frames Matrix):** Trigger automatically if the request implies deep, maximum, exhaustive, or intensive exploration. Look for intensity signals like *"to the max"*, *"intensely"*, *"don't miss anything"*, *"full"*, *"thoroughly"*, *"deep dive"*, *"every angle"*, *"all options"*, or high-stakes architectural/API decisions.
+- **Lite Mode (3 Frames Inline - Default Fallback):** Trigger for standard/casual design questions, quick brainstorm requests, or when auto-triggered by the self-judge gate without intense phrasing.
 
 ---
 

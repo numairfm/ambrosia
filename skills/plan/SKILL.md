@@ -13,9 +13,9 @@ Decompose the task into a concrete implementation plan. Research happens in a fr
 
 ## Pre-flight
 
-**1. Prerequisite check.** Read `ambrosia.log.md`. If no `[audit]` entry exists for this task AND `--force` was not passed:
+**1. Prerequisite check.** Read `ambrosia.log.md`. If no `[audit]` entry exists for this task AND `force` (or `--force`) was not passed:
 ```
-No audit found for this task. Run `audit` first to gap-check the prompt, or pass --force to plan directly.
+No audit found for this task. Run `audit` first to gap-check the prompt, or say `plan force` to plan directly.
 ```
 
 **2. Auto-init check.** If `.ambrosia/` does not exist, create it now:

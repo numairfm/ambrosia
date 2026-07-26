@@ -7,6 +7,11 @@ description: Orient yourself in an unfamiliar codebase before doing any work. Ma
 
 Map the codebase before touching it. One read-through, persistent output. Saves hours of wrong assumptions.
 
+**Three modes:**
+- `orient` (default) — full repo scan, writes `.ambrosia/orient.md`
+- `orient <path>` — scoped scan of one directory or module only (e.g. `orient src/auth`), appends to `.ambrosia/orient.md`
+- `orient audit` (or `orient architecture`) — high-bar architectural health scan using multi-frame ideation (`diverge` cognitive lenses). Writes actionable findings to `.ambrosia/architecture.md` for direct intake by `plan`.
+
 **Announce:** "Using the orient skill to map this codebase."
 
 **When to use:**
@@ -28,7 +33,35 @@ Map the codebase before touching it. One read-through, persistent output. Saves 
 
 ---
 
-## Step 1 — Structural scan
+## Step 1 — Mode & Intent Check
+
+Analyze `$ARGUMENTS` and user prompt intent:
+
+### Option A: Architectural Audit (`orient audit`, `audit architecture`, or natural intent like *"check codebase architecture"*, *"find architectural flaws"*, *"audit this repo"*)
+1. **Multi-Frame Scan (`diverge` Lenses):** Inspect the codebase across 4 cognitive frames:
+   - **Regulator:** Unhandled failure modes, missing auth/input validation boundaries.
+   - **Compiler:** Hidden state mutations, circular module coupling, unsafe type boundaries.
+   - **Archaeologist:** Buried assumptions, legacy technical debt, brittle dependencies.
+   - **Hardware/Scale:** Memory leaks, un-indexed queries, missing concurrency safeguards.
+2. **High-Bar Quality Gate:** Ignore minor formatting, style, naming, or subjective nitpicks. Flag **only** high-stakes structural issues that threaten maintainability, security, or stability.
+3. **Clean Pass Rule:** If zero critical/important issues are found, print:
+   `Architecture Audit: PASSED (Zero structural risks found)` and **do NOT invent minor complaints**.
+4. **Output:** If issues exist, write actionable finding blocks to `.ambrosia/architecture.md`.
+5. **Handoff:** Report findings and prompt: *"Run `plan .ambrosia/architecture.md` to decompose these findings into executable TDD tasks."*
+
+---
+
+### Option B: Scoped Directory Scan (`orient <path>`, e.g. `orient src/auth`)
+Set scope to that directory only. Run structural scan within the scoped directory and append a `## <path> subsystem` section to `.ambrosia/orient.md`.
+
+---
+
+### Option C: Full Orientation (`orient` or default)
+Proceed with full structural scan below (Steps 2-4).
+
+---
+
+## Step 2 — Structural scan
 
 Read the following in order, building a mental model as you go:
 
@@ -46,7 +79,7 @@ Read the following in order, building a mental model as you go:
 
 ---
 
-## Step 2 — Surface findings
+## Step 3 — Surface findings
 
 Write a structured orientation document to `.ambrosia/orient.md`:
 
@@ -90,7 +123,7 @@ Generated: <ISO timestamp>
 
 ---
 
-## Step 3 — Surface gaps in AGENTS.md
+## Step 4 — Surface gaps in AGENTS.md
 
 After writing `orient.md`, compare findings against `AGENTS.md`. If AGENTS.md exists but is missing important context:
 

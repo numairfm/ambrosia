@@ -15,11 +15,9 @@ Get a rigorous code review on any diff. Not just "does this look right" — spec
 
 **What to review?** If not specified, default to the current branch diff: `git diff main...HEAD`
 
-Options:
-- `review` — review current branch diff
-- `review --staged` — review staged changes only
-- `review <file>` — review a specific file against HEAD
-- `review <base>..<head>` — review a specific commit range
+Options (natural language matching from `$ARGUMENTS`):
+- Target: branch diff (default), staged changes (if mentioned), specific file (`review path/to/file`), or commit range (`review main..HEAD`)
+- Focus: any specific attention area mentioned (e.g. "focus on auth", "check security", "performance") is passed directly to the reviewer subagent contract.
 
 **Read AGENTS.md** for project constraints, patterns to follow, things to avoid. These are the reviewer's attention lens.
 
@@ -43,7 +41,7 @@ Write the output to `.ambrosia/review-<timestamp>.diff`. This file is what the r
 Give the reviewer:
 - The diff file path
 - AGENTS.md constraints verbatim (the exact values and patterns the project requires)
-- The specific review goal (if any — "focus on auth logic", "check for SQL injection", etc.)
+- The specific review goal or focus area from `$ARGUMENTS` (if any — "focus on auth logic", "security audit", "performance", etc.)
 - This review contract:
 
 **Review contract the subagent follows:**

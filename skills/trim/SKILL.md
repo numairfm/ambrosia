@@ -9,15 +9,15 @@ Cut what doesn't need to exist. YAGNI ruthlessly. This skill is a reporter first
 
 **Two modes:**
 - **Diff mode** (default): reviews current changes since branch start — `git diff main...HEAD`
-- **Full mode**: scans the entire repository tree — invoke with `trim --full`
+- **Full mode**: scans the entire repository tree — invoke with `trim full` (also accepts `trim --full`)
 
 ---
 
 ## Pre-flight
 
-**Prerequisite check.** Read `ambrosia.log.md`. If no `[build]` entry exists AND `--force` was not passed:
+**Prerequisite check.** Read `ambrosia.log.md`. If no `[build]` entry exists AND `force` (or `--force`) was not passed:
 ```
-No build found to trim. Run `build` first, or pass --force to trim against the current working tree.
+No build found to trim. Run `build` first, or say `trim force` to trim against the current working tree.
 ```
 
 **Empty diff check.** If diff mode is selected and `git diff main...HEAD` returns empty output, report:

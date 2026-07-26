@@ -52,9 +52,9 @@ These limitations must appear in the build completion report whenever fallback w
 
 ## Pre-flight
 
-**1. Prerequisite check.** Read `ambrosia.log.md`. If no `[plan]` entry exists AND `--force` was not passed:
+**1. Prerequisite check.** Read `ambrosia.log.md`. If no `[plan]` entry exists AND `force` (or `--force`) was not passed:
 ```
-No plan found. Run `plan` first, or pass --force to build directly with an existing plan file.
+No plan found. Run `plan` first, or say `build force` to build directly with an existing plan file.
 ```
 
 **2. Locate the plan.** Read the most recent plan from `.ambrosia/plans/`. If multiple plans exist, ask which to use.
@@ -96,7 +96,7 @@ If the user types `pause` at any point during the task loop:
 - Finish the **current task only** — do not start the next one
 - Commit and log normally
 - Append to `ambrosia.log.md`: `<timestamp> [build] paused — completed through task-<N>, <M> tasks remaining`
-- Post to chat: "Build paused after Task <N>. <M> tasks remain. Resume with `build --resume` or type `go` to continue."
+- Post to chat: "Build paused after Task <N>. <M> tasks remain. Say `build resume` to continue."
 - Stop. Do not proceed to the next task.
 
 This is distinct from `wrap-up`'s park option — pause is mid-build; park is end-of-branch.
@@ -128,8 +128,18 @@ Construct a work ticket containing ONLY:
 - Report file path: `.ambrosia/build/task-<N>-report.md`
 - Test command & build command
 - Global Constraints
+- **Role framing:** "You are a senior engineer. Your job is correctness and test coverage. Write the minimal code that makes the tests pass. No speculative abstractions."
 
 Record BASE (`git rev-parse HEAD`) before dispatch.
+
+**Parallel dispatch ping:** If this task is being dispatched alongside other tasks via `handoff`, post to chat before issuing the dispatch calls:
+```
+Dispatching <N> agents in parallel:
+  → Task <A>: <one-line description>
+  → Task <B>: <one-line description>
+  ...
+Waiting for all to return...
+```
 
 The implementer performs strict TDD (RED → GREEN → REFACTOR), commits `ambrosia(task-N): <desc>`, and writes `.ambrosia/build/task-<N>-report.md`.
 
@@ -141,8 +151,8 @@ Implementer self-review NEVER replaces the task reviewer. Every task gets an ind
 
 1. **Empty report check.** If the report file (`.ambrosia/build/task-<N>-report.md`) is missing, empty (0 bytes), or contains only whitespace: treat this as an implementer failure. Do NOT proceed to review. Re-dispatch the implementer once. If the re-dispatch also returns empty: enter the fix loop at round 2 with a fresh implementer.
 2. **Ponytail Check:** Perform a silent 1-line over-engineering check on the diff (`git diff BASE HEAD`).
-2. **Dispatch Reviewer Subagent:** Hand the reviewer the task brief, the implementer's report, the diff file (`git diff BASE HEAD`), and project global constraints.
-3. **Verdicts:**
+3. **Dispatch Reviewer Subagent:** Hand the reviewer the task brief, the implementer's report, the diff file (`git diff BASE HEAD`), and project global constraints. **Role framing for reviewer:** "You are a paranoid senior engineer. Your job is to find what's wrong: security holes, spec deviations, edge cases, over-engineering, incorrect types, missing error handling. Be specific. File and line for every finding."
+4. **Verdicts:**
    - **Spec ✅ & Quality Approved:** Complete the task.
    - **Spec ❌ or Critical/Important Issue:** Enter fix loop (Max 5 rounds; Rounds 1-3: resume implementer; Rounds 4-5: fresh implementer + model upgrade). Scoped re-review on fix diff.
 
