@@ -96,20 +96,20 @@ async function runSingleTask(task, runType, cmdTemplate) {
 
   try {
     // Stream output directly to terminal live while capturing for benchmark logs
-    const [bin, ...args] = command.match(/(?:[^\s"]+|"[^"]*")+/g).map(arg => arg.replace(/^"|"$/g, ''));
+    const tokens = command.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g) || [command];
+    const [bin, ...args] = tokens.map(arg => arg.replace(/^["']|["']$/g, ''));
     
     const proc = require('child_process').spawnSync(bin, args, {
       cwd: scratchDir,
       stdio: ['inherit', 'pipe', 'pipe'], // Live terminal output streaming captured via manual write
       encoding: 'utf-8',
-      env: { ...process.env, BENCH_RUN_TYPE: runType }
+      env: { ...process.env, BENCH_RUN_TYPE: runType },
+      timeout: 600000
     });
 
+    exitCode = (proc.status !== null && proc.status !== undefined) ? proc.status : (proc.signal ? 128 : 1);
     if (proc.error) {
-      exitCode = proc.status !== null && proc.status !== undefined ? proc.status : 1;
       stderr = proc.error.message || String(proc.error);
-    } else {
-      exitCode = proc.status !== null && proc.status !== undefined ? proc.status : 0;
     }
     stdout = proc.stdout || '';
     if (proc.stderr) stderr += proc.stderr;
