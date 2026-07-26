@@ -16,6 +16,12 @@ Ambrosia unifies core software engineering disciplines into a structured pipelin
 
 ---
 
+## Developers Note
+
+This codebase was completely vibecoded, so take it as you will. This is sort of an experimental all-in-one skill suite that packages my favorite skills into one unified system thats easy for me to understand. I like this because you can turn super rough prompts or ideas into structured better prompts with /audit and /diverge or /diverge full for brainstorming before running through the entire pipeline which ensures a better output, and or /ship to just take that rough prompt and automatically run the entire pipeline without any manual intervention. Its produced consistently better results for simple minecraft clone generations with smaller models like Deepseek V4 Flash in terms of features and optimizations. Its pretty cool that it just works! 
+
+---
+
 ## Quick Start
 
 ### Installation
@@ -146,12 +152,6 @@ Ambrosia is a synthesis of concepts from several open-source agent frameworks:
 * **[open-gsd/gsd-core](https://github.com/open-gsd/gsd-core):** Provides the context-rot defense model. Inspires Ambrosia's `.ambrosia/` workspace directory, coordinator context compression, append-only log spine (`ambrosia.log.md`), and session resume snapshots (`context`).
 * **[mattpocock/skills](https://github.com/mattpocock/skills):** Inspires the skill configuration standard (`SKILL.md`), parameter passing conventions, and clear separation between model-invoked primitives (`handoff`) and user-facing tools.
 * **[safishamsi/ponytail](https://github.com/safishamsi/ponytail):** Provides the YAGNI auditing principles used by `trim` and `debt`, introducing the structured `// ponytail:` comment format for tracking deliberate technical debt.
-
----
-
-## Development Note
-
-This codebase and documentation were developed using AI agent pair-programming workflows ("vibe coding"). While the development process was AI-assisted, the suite enforces deterministic state logging, strict TDD gates, isolated subagent contexts, and empirical test verification to ensure reliability and correctness in real-world software projects.
 
 ---
 
