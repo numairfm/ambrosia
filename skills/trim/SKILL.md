@@ -1,6 +1,6 @@
 ---
 name: trim
-description: Audit code for over-engineering and cut what doesn't need to exist. Two modes: diff (current changes only) and full (entire repo). Hard two-step gate — reports first, cuts only on explicit confirmation. Ponytail-based. Use after verify, or any time you want to cut dead weight.
+description: "Audit code for over-engineering and cut what doesn't need to exist. Two modes: diff (current changes only) and full (entire repo). Hard two-step gate — reports first, cuts only on explicit confirmation. Ponytail-based. Use after verify, or any time you want to cut dead weight."
 ---
 
 # Trim

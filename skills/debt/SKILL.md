@@ -1,6 +1,6 @@
 ---
 name: debt
-description: Harvest ponytail comments into a tracked debt ledger. Finds every deliberate simplification marked with a ponytail: comment, reports what was deferred, names what has no upgrade trigger. Report only — changes nothing. Use when you want to see accumulated technical debt from deliberate shortcuts.
+description: "Harvest ponytail comments into a tracked debt ledger. Finds every deliberate simplification marked with a ponytail: comment, reports what was deferred, names what has no upgrade trigger. Report only — changes nothing. Use when you want to see accumulated technical debt from deliberate shortcuts."
 ---
 
 # Debt

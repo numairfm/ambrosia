@@ -1,6 +1,6 @@
 ---
 name: debug
-description: Systematic root cause debugging. Four-phase process: reproduce, isolate, hypothesize, fix. Never proposes fixes without root cause. Dispatches handoff on unrelated bugs. Escalates to diverge on architectural failures. Use when something is broken, a test fails, or behavior is unexpected.
+description: "Systematic root cause debugging. Four-phase process: reproduce, isolate, hypothesize, fix. Never proposes fixes without root cause. Dispatches handoff on unrelated bugs. Escalates to diverge on architectural failures. Use when something is broken, a test fails, or behavior is unexpected."
 ---
 
 # Debug

@@ -1,6 +1,6 @@
 ---
 name: wrap-up
-description: Close out a development branch. Verifies tests, auto-runs debt audit, prompts for trim, then presents options: merge locally, push and create PR, keep branch as-is, or park for later. Also supports rollback to last clean checkpoint. Use when verify is clean and work is ready to integrate.
+description: "Close out a development branch. Verifies tests, auto-runs debt audit, prompts for trim, then presents options: merge locally, push and create PR, keep branch as-is, or park for later. Also supports rollback to last clean checkpoint. Use when verify is clean and work is ready to integrate."
 ---
 
 # Wrap-up
