@@ -18,7 +18,11 @@ Decompose the task into a concrete implementation plan. Research happens in a fr
 No audit found for this task. Run `audit` first to gap-check the prompt, or pass --force to plan directly.
 ```
 
-**2. Auto-init check.** If `.ambrosia/` does not exist, run `init` now before continuing.
+**2. Auto-init check.** If `.ambrosia/` does not exist, create it now:
+  ```bash
+  mkdir -p .ambrosia/{plans,specs} && touch .ambrosia/ambrosia.log.md
+  ```
+  Then continue.
 
 **3. Read AGENTS.md.** If `AGENTS.md` exists, read it fully. Project constraints override Ambrosia defaults.
 
@@ -40,6 +44,14 @@ If the task touches > 3 files or requires deep exploration of unread directories
 
 Never have research modify source files.
 
+---
+
+## Step 1b — Architecture sketch
+
+Before decomposing into files and tasks, write a 3-5 sentence prose sketch of the intended architecture — major components, how they connect, the load-bearing design decision. Post this as a visible ping.
+
+- Task scored ≥ 6 in audit → continue immediately after posting
+- Task scored < 6 in audit → make this a gate: wait for the user to confirm the shape before proceeding to Step 2
 
 ---
 
@@ -122,25 +134,25 @@ Fix issues inline. No need to re-review.
 
 ---
 
-## Step 5 — Cost estimate
+## Step 5 — Approval
 
-Before presenting for approval:
+**For all plans:** Post the full plan summary as a visible ping before proceeding:
+
 ```
 Plan summary:
   Tasks: <N> (<M> parallel-safe, <K> sequential)
+  Files touched: <list>
   Estimated subagent calls: ~<N + parallel-safe batches>
-  Expected branches: ambrosia/<slug>
+  Branch: ambrosia/<slug>
+
+Assumed defaults (from audit):
+  - <default carried from audit step>
+  (none — all constraints were explicit)
 ```
 
----
+**For plans with ≤ 5 tasks:** After posting the summary, say "Proceeding — say 'stop' to cancel." Then **end the response**. Do not continue in the same reply. Wait for the next user message before invoking `build`.
 
-## Step 6 — Approval
-
-**For plans with ≤ 5 tasks:** "Plan written. Proceeding in 30s unless you say stop." (opt-out approval)
-
-**For plans with > 5 tasks:** Present the plan. "Review this plan. Type `go` to build, or give feedback."
-
-Wait for response on large plans.
+**For plans with > 5 tasks:** After posting the summary, say "Review this plan. Type `go` to build, or give feedback." Wait for explicit approval before proceeding.
 
 ---
 
