@@ -2,7 +2,8 @@
 .ambrosia/
 
 # Testbench scratch data
-testbench/
+testbench/scratch/
+testbench/dashboard/benchmark-data.json
 
 # OS & Editor files
 .DS_Store
