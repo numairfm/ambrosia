@@ -61,6 +61,8 @@ For each frame, dispatch one **parallel** Agent/Task call. Each agent receives O
 
 **Critical invariant:** All agent calls MUST be issued in the same response turn. Do NOT serialize them. Do NOT pass one branch's output as context to another. Branches that see each other anchor each other — the whole method collapses.
 
+**Protocol note:** This dispatch follows the same invariant as `handoff`. If called from within an active `build` or `verify` session, prefer routing through `handoff` rather than re-implementing dispatch inline — so any future protocol changes propagate automatically.
+
 ### Frame table
 
 | Frame | Vantage prompt | Best for |
