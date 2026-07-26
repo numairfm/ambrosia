@@ -22,7 +22,7 @@ Score the prompt silently (0-2 each, max 10):
 4. **No bundling** (single coherent task)
 5. **No ungrounded claims** (verified external assumptions)
 
-- **Score ≥ 8:** Skip interview. Write final prompt directly (Step 3).
+- **Score ≥ 8:** Announce "Prompt is clear (score <N>/10) — proceeding directly to plan." Then write final prompt (Step 3).
 - **Score < 8:** Proceed to Step 1.
 
 ---
@@ -41,7 +41,7 @@ If critical holes exist that change what gets built, ask concise, batched questi
 If defaults cover the gaps, present the prompt along with assumed defaults for 1-turn approval:
 
 ```
-Assumed defaults:
+Assumed defaults (carry this list to the plan summary):
 - [Default 1]
 - [Default 2]
 
@@ -62,7 +62,7 @@ If bundled, split into `Prompt 1 of N`, `Prompt 2 of N`. Tag parallel-safe items
 
 ---
 
-## Step 5 — Ambrosia Handoff
+## Step 5 — Pass to Plan
 
 Append to `ambrosia.log.md`:
 ```
