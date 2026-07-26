@@ -1,6 +1,6 @@
 ---
 name: verify
-description: Confirm work is actually done — evidence-based, plan-checked. Runs the full test suite, checks output against the plan line by line, stamps a clean checkpoint. Dispatches handoff on independent failures. Use after build, before trim or wrap-up.
+description: Confirm work is actually done — evidence-based, plan-checked. Runs the full test suite, checks output against the plan line by line, stamps a clean checkpoint. Routes failures through debug (which decides if handoff is appropriate). Use after build, before trim or wrap-up.
 ---
 
 # Verify
