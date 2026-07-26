@@ -16,6 +16,36 @@ All source file changes go through implementer subagents.
 ```
 This is not optional. If the coordinator edits files directly it: (a) pollutes its own context with implementation detail it doesn't need, (b) bypasses the review loop, (c) breaks ledger integrity. If a fix seems "too small" to dispatch — dispatch it anyway.
 
+If subagent dispatch is genuinely unavailable (network failure, harness limitation), see **Inline fallback** below.
+
+---
+
+## Inline fallback (failure mode only)
+
+This section documents what to do when subagent dispatch is unavailable — not an elective mode.
+
+**Trigger:** Subagent dispatch fails due to network error, harness limitation, or model unavailability. This is NOT a shortcut for tasks that feel "too small to dispatch."
+
+**Protocol:**
+1. Coordinator executes the task inline (edits files directly)
+2. Append to `ambrosia.log.md`:
+   ```
+   <timestamp> [build] task-<N> INLINE-FALLBACK — subagent dispatch failed: <reason>
+   ```
+3. **Still dispatch an independent reviewer subagent** for the coordinator's diff — the review guarantee is not waived by the fallback
+4. Note the deviation in the final build completion report:
+   ```
+   ⚠ Tasks executed inline (fallback): task-<N>[, task-<M>] — dispatch unavailable
+   ```
+
+**What is not preserved in fallback mode:**
+- Coordinator context cleanliness (it now contains implementation detail)
+- Full independence of review (reviewer and writer share the same session context)
+
+These limitations must appear in the build completion report whenever fallback was used.
+
+---
+
 **Continuous execution:** Do not pause between tasks to check in. Execute all tasks without stopping unless: BLOCKED, genuine ambiguity that prevents progress, or all tasks complete.
 
 ---
