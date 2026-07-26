@@ -71,6 +71,15 @@ Reply 'confirm' or 'confirm 1,3' to apply, or 'skip' to cancel.
 
 Do NOT modify files until confirmation is received.
 
+---
+
+## Step 3 — Wait for confirmation
+
+Do not proceed until the user replies. This is a hard gate — trim never self-approves.
+
+- `confirm` → apply all cuts (Step 4)
+- `confirm 1,3` (numbers) → apply only the listed cuts
+- `skip` or no reply → log `[trim] skipped by user` and complete without changes
 
 ---
 
