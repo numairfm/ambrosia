@@ -1,58 +1,94 @@
 # Ambrosia
 
-A self-contained AI coding skill suite. Open Agent Skills format — installs as one plugin across Antigravity, OpenCode, Claude Code, Codex, Cursor, and any harness that reads `SKILL.md` files.
+A self-contained, high-performance AI coding skill suite. Built for context-rot resistance, maximum execution speed, and token efficiency without compromising code quality.
 
-## Skills
+Works natively across **Antigravity**, **Claude Code**, **OpenCode**, **Cursor**, **Codex**, **Gemini CLI**, **Copilot CLI**, and any harness supporting `SKILL.md` files or plugin hooks.
 
-| Skill | What it does |
-|---|---|
-| `using-ambrosia` | Bootstrap, orientation, and standing behavioral orders |
-| `orient` | Maps structure and patterns in unfamiliar codebases |
-| `audit` | Gap-check and improve a raw prompt/idea via interactive interrogation |
-| `plan` | Decompose into a file-mapped, parallel-tagged plan |
-| `build` | TDD execution with fresh subagents and git checkpointing |
-| `verify` | Evidence-based completion check against the plan |
-| `debug` | Systematic root-cause debugging |
-| `diverge` | ADHD-style parallel ideation for open-ended decisions |
-| `handoff` | Same-turn concurrent subagent dispatch (model-invoked) |
-| `review` | Standalone code review for any diff or file |
-| `trim` | Cut over-engineering from diff or full repo |
-| `debt` | Harvest ponytail: comments into a debt ledger |
-| `wrap-up` | Close out a branch: merge, PR, park, or rollback |
+---
 
-## Standard pipeline
+## Skill Index
+
+| Skill | Type | What it does |
+|---|---|---|
+| `using-ambrosia` | Bootstrap | Suite introduction, standing behavioral orders (ADHD, Ponytail, Web Grounding), and mode routing |
+| `orient` | Tool | Maps codebase architecture, entry points, and fragile zones |
+| `audit` | Tool | Refines raw task prompts, formulates default assumptions, and identifies parallel safety |
+| `plan` | Spine | Decomposes tasks into file-mapped implementation plans (with fast-path inline research for ≤3 files) |
+| `build` | Spine | Executes plans via TDD using isolated subagents with mandatory independent task review |
+| `verify` | Spine | Empirical verification gate with line-by-line requirement tracing (`file:line`) |
+| `debug` | Tool | Systematic 4-phase root-cause debugging with early divergence escalation |
+| `diverge` | Tool | Multi-frame architectural, UX, and naming ideation (Lite 3-option vs Full 5-frame matrix) |
+| `handoff` | System | Concurrent subagent dispatch mechanism (model-invoked) |
+| `review` | Tool | Standalone code review for any diff or commit range |
+| `trim` | Tool | Audits & strips over-engineering (`yagni`, `stdlib`, `native`, `delete`, `shrink`) |
+| `debt` | Tool | Harvests and tracks `// ponytail:` technical debt markers into a ledger |
+| `wrap-up` | Spine | Closes out branches cleanly: merge locally, create PR, park, or rollback |
+
+---
+
+## Standard Pipeline
 
 ```
-audit → plan → build → verify → [debug] → trim → wrap-up
+[orient] → audit → plan → build → verify → [debug] → [trim] → wrap-up
 ```
 
-## Install
+*Direct Execution:* Questions, single-file bugfixes, or small edits bypass the pipeline and execute directly.
 
-Copy this repo into your agent's skills directory, or reference `plugin.json` from your agent's plugin config.
+---
 
-**Antigravity / OpenCode / Claude Code:**
+## Multi-Harness Installation
+
+Ambrosia features automatic `SessionStart` context injection and cross-harness hook support.
+
+### Antigravity CLI
 ```bash
-# Copy skills to your global skills directory
-cp -r skills/* ~/.gemini/skills/
+agy plugin install https://github.com/numairfm/ambrosia
 ```
 
-Or install as a plugin by pointing your agent config at this directory.
+### Claude Code
+```bash
+/plugin install numairfm/ambrosia
+```
 
-## What makes it different
+### OpenCode.ai
+Add Ambrosia to `opencode.json`:
+```json
+{
+  "plugin": ["ambrosia@git+https://github.com/numairfm/ambrosia.git"]
+}
+```
 
-- **Context rot resistance** — fresh-context subagents at every phase + persistent append-only log
-- **Real parallelism** — same-turn concurrent dispatch via `handoff`, not sequential workarounds  
-- **YAGNI by default** — ponytail leanness baked in, not bolted on after
-- **Harness-agnostic** — pure SKILL.md format, no hooks, no harness-specific glue
-- **Everything contained** — all Ambrosia artifacts live in `.ambrosia/`, nothing bleeds into your project
+### Cursor Agent
+```text
+/add-plugin https://github.com/numairfm/ambrosia
+```
 
-## Inspired by
+### Gemini CLI
+```bash
+gemini extensions install https://github.com/numairfm/ambrosia
+```
 
-- [obra/superpowers](https://github.com/obra/superpowers) — methodology backbone
+---
+
+## Key Differentiators
+
+- **Context Rot Resistance:** Isolated subagent contexts per task + append-only `ambrosia.log.md` + coordinator compression every 3 tasks.
+- **Real Parallelism:** Same-turn concurrent subagent dispatch via `handoff`.
+- **Always-On Ponytail Leanness:** YAGNI by default, native stdlib/platform prioritization, and `// ponytail:` debt tracking.
+- **Fast-Path & Precision:** Fast-path inline research for small plans paired with Superpowers-grade independent code reviews and line-by-line verification.
+- **Clean Workspace Isolation:** All state, specs, and plans reside in `.ambrosia/` — zero project structure pollution.
+
+---
+
+## Inspired By
+
+- [obra/superpowers](https://github.com/obra/superpowers) — methodology backbone & multi-agent hook structure
 - [UditAkhourii/adhd](https://github.com/uditakhourii/adhd) — diverge skill base
 - [open-gsd/gsd-core](https://github.com/open-gsd/gsd-core) — context-rot mechanisms
 - [mattpocock/skills](https://github.com/mattpocock/skills) — user/model invocation split
 - [safishamsi/ponytail](https://github.com/safishamsi/ponytail) — trim and debt skills
+
+---
 
 ## License
 
