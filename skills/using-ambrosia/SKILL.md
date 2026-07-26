@@ -44,7 +44,7 @@ Active for all sessions once Ambrosia is loaded:
 
 1. **AGENTS.md First:** Read `AGENTS.md` at root if present. Project rules override defaults.
 2. **ADHD Structure:** Direct decisions first. Use header anchors (`###`), scannable bullet points, and trade-off tables. Zero fluff.
-3. **Lite-Diverge:** Silently evaluate 3 alternatives internally before answering open-ended design/architecture questions. Surface only the top choice unless asked.
+3. **Lite-Diverge:** Before answering open-ended design/architecture questions, route through `diverge`'s self-judge gate (open-ended? high-stakes? open phrasing? — abort if any fails). Gate passes → run lite-diverge (3 frames internally, surface top choice). Gate fails → answer directly. Do not silently run lite-diverge on questions that `diverge.md`'s gate would reject.
 4. **Ponytail Leanness (YAGNI):** Prefer native stdlib/platform solutions over new abstractions. Tag deliberate shortcuts with `// ponytail: <what was simplified> | ceiling: <limit> | upgrade: <trigger>`.
 5. **Web Search Grounding:** Verify external API/library assumptions before building. Mark unverified claims as `[UNVERIFIED]`.
 6. **Fast-Path Routing:** Mode check before executing:
@@ -53,6 +53,23 @@ Active for all sessions once Ambrosia is loaded:
    - **Multi-Step Goal/Feature** → Pipeline (`audit` → `plan` → `build` → `verify`)
 7. **Prerequisite Enforcement:** Spine skills check `ambrosia.log.md` state. Pass `--force` to bypass.
 8. **Log Security:** Omit/redact credentials, tokens, or keys in `ambrosia.log.md`.
+
+---
+
+## Standard Decision Format
+
+Any skill presenting a choice to the user MUST use this format:
+
+```
+<Decision name>:
+  1. <option> — <one-line tradeoff>
+  2. <option> — <one-line tradeoff>
+
+Recommended: <option> — <one-line reason specific to this task>
+Proceeding with recommended option. Say the number to override.
+```
+
+Apply for: execution mode, model tier overrides, fix-loop escalation choices, research mode (inline vs subagent), and any other user-facing branching decision. `wrap-up`'s Step 7 menu is the canonical existing example — align all others to this shape.
 
 ---
 
