@@ -17,7 +17,7 @@ description: "Systematic root cause debugging. Four-phase process: reproduce, is
 **1. Triage incoming bugs.** If multiple bugs or failures are reported, classify them:
 - Same root cause → handle together
 - Related (one causes another) → handle sequentially, root first
-- **Unrelated (disjoint files, disjoint subsystems)** → invoke `handoff` to dispatch in parallel, then resume
+- **Unrelated (disjoint files, disjoint subsystems)** → invoke `handoff` to dispatch in parallel (relying on `handoff/SKILL.md`'s centralized parallel dispatch ping), then resume
 
 **2. Read AGENTS.md** for project-specific debugging context, test commands, known environment issues.
 

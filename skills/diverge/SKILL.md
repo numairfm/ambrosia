@@ -9,7 +9,7 @@ Explore alternative designs, naming, architectures, or debugging hypotheses befo
 
 **Two Tiers:**
 - **Lite-Diverge (Default/Inline):** Silently brainstorm 3 distinct options internally. Surface only the top recommended option with a 1-sentence trade-off summary.
-- **Full-Diverge (`diverge full`):** Execute a complete 3-frame divergent matrix across architectural, UX, and operational axes.
+- **Full-Diverge (`diverge full`):** Execute a complete 5-frame divergent matrix across architectural, UX, and operational axes.
 
 ---
 

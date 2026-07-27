@@ -11,6 +11,10 @@ Cut what doesn't need to exist. YAGNI ruthlessly. This skill is a reporter first
 - **Diff mode** (default): reviews current changes since branch start — `git diff main...HEAD`
 - **Full mode**: scans the entire repository tree — invoke with `trim full` (also accepts `trim --full`)
 
+**Decline Ledger & Options:**
+- `--reset-declines`: Clears `.ambrosia/trim-decline.md` to re-evaluate all previously declined over-engineering findings.
+- Persistent decline ledger (`.ambrosia/trim-decline.md`) tracks findings explicitly declined by the user.
+
 ---
 
 ## Pre-flight
@@ -19,6 +23,8 @@ Cut what doesn't need to exist. YAGNI ruthlessly. This skill is a reporter first
 ```
 No build found to trim. Run `build` first, or say `trim force` to trim against the current working tree.
 ```
+
+**Reset declines check.** If `--reset-declines` (or `reset-declines`) is passed, clear `.ambrosia/trim-decline.md` before scanning.
 
 **Empty diff check.** If diff mode is selected and `git diff main...HEAD` returns empty output, report:
 ```
@@ -41,6 +47,9 @@ Or if on `ambrosia/<branch>`: `git diff main...ambrosia/<branch>`
 **Full mode:**
 Scan the full repository tree. Skip: `node_modules/`, `.git/`, `build/`, `dist/`, `target/`, `.ambrosia/`.
 
+**Decline Ledger Filter:**
+Read `.ambrosia/trim-decline.md` if present. Any over-engineering finding explicitly declined by the user in past runs is recorded in `.ambrosia/trim-decline.md` and permanently ignored in future `trim full` runs unless `--reset-declines` is passed.
+
 For each finding, classify with a tag:
 
 | Tag | Meaning |
@@ -61,7 +70,7 @@ If nothing to cut:
 ```
 Lean already. Zero cuts identified.
 ```
-Append `[trim] clean` to `ambrosia.log.md` and complete automatically.
+Append `[<session-tag>] [trim] clean` to `ambrosia.log.md` and complete automatically.
 
 If cuts exist, present the cut list and prompt for single-turn confirmation:
 ```
@@ -78,8 +87,8 @@ Do NOT modify files until confirmation is received.
 Do not proceed until the user replies. This is a hard gate — trim never self-approves.
 
 - `confirm` → apply all cuts (Step 4)
-- `confirm 1,3` (numbers) → apply only the listed cuts
-- `skip` or no reply → log `[trim] skipped by user` and complete without changes
+- `confirm 1,3` (numbers) → apply only the listed cuts; unselected findings are recorded to `.ambrosia/trim-decline.md`
+- `skip` or no reply → record presented findings to `.ambrosia/trim-decline.md`, log `[<session-tag>] [trim] skipped by user` and complete without changes
 
 ---
 
@@ -101,7 +110,7 @@ git commit -m "ambrosia(trim): remove over-engineering — <N> cuts"
 
 Append to `ambrosia.log.md`:
 ```
-<timestamp> [trim] <mode> — <N> findings, <M> confirmed cuts, ~<K> lines removed
+<timestamp> [<session-tag>] [trim] <mode> — <N> findings, <M> confirmed cuts, ~<K> lines removed
 ```
 
-Note any findings that were reviewed but not cut — they may be worth revisiting later.
+Note any findings that were reviewed but not cut — they are recorded in `.ambrosia/trim-decline.md`.

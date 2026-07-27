@@ -49,29 +49,50 @@ For each item, construct a minimal work ticket:
 Omit session history, past summaries, or details of other parallel tasks.
 
 
-### Step 3 — Dispatch in parallel
+### Step 3 — Write handoff manifest
 
-Issue ALL dispatch calls in this single response. Each subagent:
+Before dispatching parallel subagents, write `.ambrosia/handoff-manifest.md` listing all dispatched task IDs and target files:
+```markdown
+# Handoff Manifest
+Dispatched Tasks:
+- task-<ID>: target files [<file1>, <file2>]
+```
+
+### Step 4 — Dispatch in parallel
+
+Before issuing dispatch calls, post the chat-visible parallel dispatch ping to announce all dispatched tasks:
+```
+Dispatching <N> agents in parallel:
+  -> <item-1-label>: <one-line description>
+  -> <item-2-label>: <one-line description>
+  ...
+Waiting for all to return...
+```
+
+Issue ALL dispatch calls in this single response turn. Any parallel invocation originating from skills (such as build, debug, or verify) relies on this centralized dispatch ping.
+
+Each subagent:
 - Starts with a clean context window
 - Receives only its work ticket
 - Writes its full output to its report file
 - Returns: status, commits made (if any), one-line result summary, concerns
 
-### Step 4 — Integrate
+### Step 5 — Integrate
 
 After all subagents return:
 
 1. **Read each report file.** Don't trust the one-line summary alone for integration decisions.
-1a. **Empty report check.** If any report file is missing, empty, or whitespace-only: treat that subagent as BLOCKED regardless of the status it returned. Do not integrate its changes. Surface to user: "Subagent <label> returned empty output — treating as BLOCKED."
+1a. **Canonical empty-report policy.** If any report file is missing, empty (0 bytes), or whitespace-only, the subagent output is always treated as BLOCKED requiring explicit resolution, regardless of any status reported elsewhere. Do not integrate its changes. Surface to user: "Subagent <label> returned empty output — treating as BLOCKED."
 2. **Conflict check.** Verify the changes don't conflict: overlapping lines, contradictory interfaces, incompatible assumptions. If conflict found: surface to user before merging anything.
 3. **Run the full test suite.** Evidence before integration claims.
 4. **Handle statuses:**
-   - DONE → integrate
-   - DONE_WITH_CONCERNS → read concerns before integrating; address if correctness-related
-   - NEEDS_CONTEXT → provide context, re-dispatch that item alone
-   - BLOCKED → surface to user; don't integrate other items until blocker is assessed
+   - DONE -> integrate
+   - DONE_WITH_CONCERNS -> read concerns before integrating; address if correctness-related
+   - NEEDS_CONTEXT -> provide context, re-dispatch that item alone
+   - BLOCKED -> surface to user; don't integrate other items until blocker is assessed
+5. **Clean up manifest.** Delete `.ambrosia/handoff-manifest.md` upon successful integration of all subagent results.
 
-### Step 5 — Log completion
+### Step 6 — Log completion
 
 ```
 <timestamp> [handoff] <N> agents returned — integrated: <labels> | blocked: <labels if any>

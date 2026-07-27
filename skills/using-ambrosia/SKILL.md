@@ -58,21 +58,16 @@ Active for all sessions once Ambrosia is loaded:
 7. **Prerequisite Enforcement:** Spine skills check `ambrosia.log.md` state. Say `<skill> force` (e.g. `plan force`, `build force`) to bypass.
 8. **Log Security:** Omit/redact credentials, tokens, or keys in `ambrosia.log.md`.
 9. **Natural Language Modes:** Skills use space-separated mode words, not CLI flags (e.g. `diverge full`, not `diverge --full`). The `--` forms are accepted as fallbacks but not preferred.
+10. **Zero Emojis:** Never use emojis in chat responses, progress pings, decision menus, or generated skill specifications.
 
 ---
 
 ## Standard Decision Format
 
-Any skill presenting a choice to the user MUST use this format:
+Any skill presenting a choice to the user MUST adhere to harness-aware decision rules:
 
-```
-<Decision name>:
-  1. <option> — <one-line tradeoff>
-  2. <option> — <one-line tradeoff>
-
-Recommended: <option> — <one-line reason specific to this task>
-Proceeding with recommended option. Say the number to override.
-```
+- **Interactive Question Tools Available:** If the host agent environment supports interactive question tools (such as `ask_question` or OpenCode question APIs), use them to render selectable choices.
+- **Fallback / Standard Text Rendering:** Otherwise, render options as clean, scannable markdown lists (do NOT use code blocks, and do NOT make false "proceeding with" claims without user input).
 
 Apply for: execution mode, model tier overrides, fix-loop escalation choices, research mode (inline vs subagent), and any other user-facing branching decision. `wrap-up`'s Step 7 menu is the canonical existing example — align all others to this shape.
 
@@ -80,7 +75,8 @@ Apply for: execution mode, model tier overrides, fix-loop escalation choices, re
 
 ## Bootstrap & State
 
-- `.ambrosia/` (`plans/`, `specs/`, `context.md`, `ambrosia.log.md`) auto-initializes on first skill run.
+- `.ambrosia/` (`plans/`, `specs/`, `context.md`, `ambrosia.log.md`, `trim-decline.md`) auto-initializes on first skill run.
+- **Session Tagging:** Upon bootstrap, generate a unique 4-character alphanumeric session tag (e.g. `[a1b2]`). Prefix all `ambrosia.log.md` appends with the active session tag (e.g. `<timestamp> [<session-tag>] [skill] log entry`).
 - Stating a new project goal automatically triggers `audit`.
 - If `.ambrosia/PARKED.md` exists, prompt to resume the parked session immediately.
 - If `.ambrosia/context.md` exists from a previous session, read it before doing anything else.

@@ -43,7 +43,7 @@ Do NOT claim anything is complete until failures are resolved.
 
 Classify failures:
 - **Related failures** (same root cause, same subsystem) → handle together via `debug`
-- **Independent failures** (different subsystems, disjoint files) → invoke `debug` for each; `debug`'s own pre-flight determines whether those failures are `handoff`-eligible for parallel dispatch
+- **Independent failures** (different subsystems, disjoint files) → invoke `debug` for each; `debug`'s own pre-flight determines whether those failures are `handoff`-eligible for parallel dispatch (relying on `handoff/SKILL.md`'s centralized parallel dispatch ping)
 
 **If tests pass:** continue to Step 2.
 
@@ -68,9 +68,9 @@ Read the plan. For each requirement, confirm it exists in the built code at a sp
 
 ```
 Plan compliance:
-  ✅ Task 1: <requirement> — verified at <file:line>
-  ✅ Task 2: <requirement> — verified at <file:line>
-  ❌ Task 3: <requirement> — NOT FOUND
+  [PASS] Task 1: <requirement> — verified at <file:line>
+  [PASS] Task 2: <requirement> — verified at <file:line>
+  [FAIL] Task 3: <requirement> — NOT FOUND
 ```
 
 A requirement is verified only when you can point to the file and line that implements it. "Tests pass, phase complete" is NOT verification.

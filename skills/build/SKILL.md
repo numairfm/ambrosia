@@ -35,7 +35,7 @@ This section documents what to do when subagent dispatch is unavailable — not 
 3. **Still dispatch an independent reviewer subagent** for the coordinator's diff — the review guarantee is not waived by the fallback
 4. Note the deviation in the final build completion report:
    ```
-   ⚠ Tasks executed inline (fallback): task-<N>[, task-<M>] — dispatch unavailable
+   [WARN] Tasks executed inline (fallback): task-<N>[, task-<M>] — dispatch unavailable
    ```
 
 **What is not preserved in fallback mode:**
@@ -77,7 +77,8 @@ Present all conflicts as one batched question. If scan is clean, proceed without
 git checkout -b ambrosia/<plan-slug>
 ```
 
-If the branch already exists (resuming a session), check the current position:
+If the branch already exists (resuming a session / Step 1/bootstrap):
+- Inspect `.ambrosia/handoff-manifest.md`. If present on resume, cross-reference git commit history against dispatched task IDs to surface orphaned in-flight tasks.
 - Read `ambrosia.log.md` for `[build] task-N complete` entries
 - Resume at the first task without a completion entry
 - Never re-execute completed tasks
@@ -132,14 +133,7 @@ Construct a work ticket containing ONLY:
 
 Record BASE (`git rev-parse HEAD`) before dispatch.
 
-**Parallel dispatch ping:** If this task is being dispatched alongside other tasks via `handoff`, post to chat before issuing the dispatch calls:
-```
-Dispatching <N> agents in parallel:
-  → Task <A>: <one-line description>
-  → Task <B>: <one-line description>
-  ...
-Waiting for all to return...
-```
+**Parallel dispatch ping:** If tasks are being dispatched in parallel via `handoff`, rely on `handoff/SKILL.md`'s centralized parallel dispatch ping to announce all dispatched tasks.
 
 The implementer performs strict TDD (RED → GREEN → REFACTOR), commits `ambrosia(task-N): <desc>`, and writes `.ambrosia/build/task-<N>-report.md`.
 
@@ -149,18 +143,16 @@ The implementer performs strict TDD (RED → GREEN → REFACTOR), commits `ambro
 
 Implementer self-review NEVER replaces the task reviewer. Every task gets an independent reviewer subagent.
 
-1. **Empty report check.** If the report file (`.ambrosia/build/task-<N>-report.md`) is missing, empty (0 bytes), or contains only whitespace: treat this as an implementer failure. Do NOT proceed to review. Re-dispatch the implementer once. If the re-dispatch also returns empty: enter the fix loop at round 2 with a fresh implementer.
+1. **Empty report check.** If the report file (`.ambrosia/build/task-<N>-report.md`) is missing, empty (0 bytes), or contains only whitespace, apply `handoff/SKILL.md`'s canonical BLOCKED policy (empty or whitespace-only subagent output is always treated as BLOCKED requiring explicit resolution). Treat this as an implementer failure and do NOT proceed to review. Re-dispatch the implementer once. If the re-dispatch also returns empty, mark as BLOCKED per canonical policy and enter the fix loop at round 2 with a fresh implementer.
 2. **Ponytail Check:** Perform a silent 1-line over-engineering check on the diff (`git diff BASE HEAD`).
 3. **Dispatch Reviewer Subagent:** Hand the reviewer the task brief, the implementer's report, the diff file (`git diff BASE HEAD`), and project global constraints. **Role framing for reviewer:** "You are a paranoid senior engineer. Your job is to find what's wrong: security holes, spec deviations, edge cases, over-engineering, incorrect types, missing error handling. Be specific. File and line for every finding."
 4. **Verdicts:**
-   - **Spec ✅ & Quality Approved:** Complete the task.
-   - **Spec ❌ or Critical/Important Issue:** Enter fix loop (Max 5 rounds; Rounds 1-3: resume implementer; Rounds 4-5: fresh implementer + model upgrade). Scoped re-review on fix diff.
-
-
+   - **Spec PASS & Quality Approved:** Complete the task.
+   - **Spec FAIL or Critical/Important Issue:** Enter fix loop (Max 5 rounds; Rounds 1-3: resume implementer; Rounds 4-5: fresh implementer + model upgrade). Scoped re-review on fix diff.
 
 ### 4. Fix loop (if required)
 
-If the reviewer flagged Spec ❌ or Critical/Important Issue:
+If the reviewer flagged Spec FAIL or Critical/Important Issue:
 - **Rounds 1-3:** Resume the same implementer subagent with the scoped fix diff + reviewer's exact findings
 - **Rounds 4-5:** Fresh implementer subagent, model upgraded one tier above the stuck implementer
 - Each round: scoped re-review on the fix diff only (not the full task diff)
@@ -205,7 +197,7 @@ Append to `ambrosia.log.md`:
 
 **Ping:** Post to chat:
 ```
-✓ Task <N>/<total> — <one-line description of what was built> — commits <base7>..<head7>
+[DONE] Task <N>/<total> — <one-line description of what was built> — commits <base7>..<head7>
 ```
 
 ### 8. Coordinator compression (every 3 tasks)

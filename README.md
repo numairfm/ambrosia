@@ -23,7 +23,6 @@ This codebase was completely vibecoded, so take it as you will. This is sort of 
 ---
 
 ## Quick Start
-
 ### Installation
 
 ```bash
@@ -152,6 +151,11 @@ Ambrosia is a synthesis of concepts from several open-source agent frameworks:
 * **[open-gsd/gsd-core](https://github.com/open-gsd/gsd-core):** Provides the context-rot defense model. Inspires Ambrosia's `.ambrosia/` workspace directory, coordinator context compression, append-only log spine (`ambrosia.log.md`), and session resume snapshots (`context`).
 * **[mattpocock/skills](https://github.com/mattpocock/skills):** Inspires the skill configuration standard (`SKILL.md`), parameter passing conventions, and clear separation between model-invoked primitives (`handoff`) and user-facing tools.
 * **[safishamsi/ponytail](https://github.com/safishamsi/ponytail):** Provides the YAGNI auditing principles used by `trim` and `debt`, introducing the structured `// ponytail:` comment format for tracking deliberate technical debt.
+---
+
+## Development Note
+
+This codebase and documentation were developed using AI agent pair-programming workflows ("vibe coding"). While the development process was AI-assisted, the suite enforces deterministic state logging, strict TDD gates, isolated subagent contexts, and empirical test verification to ensure reliability and correctness in real-world software projects.
 
 ---
 
