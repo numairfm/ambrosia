@@ -1,28 +1,33 @@
 # Ambrosia
 
-Self-contained AI software engineering framework and skill suite designed to eliminate context rot, enforce Test-Driven Development (TDD), and execute parallel multi-agent workflows across LLM harnesses.
+**Ambrosia is an opinionated software engineering operating system for AI coding agents.**
+
+Instead of relying on increasingly long prompts, Ambrosia decomposes work into isolated worker subagents, enforces evidence-based verification, and eliminates context rot through a structured execution pipeline. It is not a prompt pack. It is not a collection of utilities. It is a mental model for how AI agents should engineer software.
 
 Ambrosia operates natively in **Antigravity**, **Claude Code**, **OpenCode**, **Cursor**, **Gemini CLI**, **Codex**, and any environment supporting `SKILL.md` configurations.
 
 ---
 
-## Technical Overview
+## The Seven Principles
 
-Ambrosia unifies core software engineering disciplines into a structured pipeline. Rather than relying on unstructured chat prompts or monolithic single-agent loops, it enforces:
+1. **Context is finite.** Treat every token as a resource. Isolate workers. Compress coordinators. Never let context rot destroy a long session.
 
-1. **Context Isolation:** The main coordinator session coordinates tasks but does not edit source files directly. Implementation is delegated to fresh, single-task subagents to keep context windows clean.
-2. **Empirical Verification:** Completion claims require fresh test suite execution and line-by-line plan compliance checks.
-3. **Structured Pipeline Gating:** Execution state persists in `.ambrosia/ambrosia.log.md`, enforcing stage prerequisites (`orient` -> `audit` -> `plan` -> `build` -> `verify` -> `wrap-up`).
+2. **Plans outlive prompts.** A prompt disappears when the chat ends. A file-mapped plan with explicit interfaces and test contracts survives sessions, agents, and reboots.
 
----
+3. **Evidence beats confidence.** No completion claim is valid without fresh test output. "It should work" is not verification.
 
-## Developers Note
+4. **Parallelize thought, not edits.** Run cognitive frames in parallel during design. Serialize file changes to avoid conflicts. Think wide, write narrow.
 
-This codebase was completely vibecoded, so take it as you will. This is sort of an experimental all-in-one skill suite that packages my favorite skills into one unified system thats easy for me to understand. I like this because you can turn super rough prompts or ideas into structured better prompts with /audit and /diverge or /diverge full for brainstorming before running through the entire pipeline which ensures a better output, and or /ship to just take that rough prompt and automatically run the entire pipeline without any manual intervention. Its produced consistently better results for simple minecraft clone generations with smaller models like Deepseek V4 Flash in terms of features and optimizations. Its pretty cool that it just works! 
+5. **Small workers, strong coordinator.** The coordinator orchestrates and integrates. Workers implement and commit. The coordinator never touches source files directly.
+
+6. **Delete aggressively.** Abstractions, dependencies, and dead code all have carrying costs. Remove anything that does not exist to serve a current, verified requirement.
+
+7. **Leave the repository healthier than you found it.** Every session should end with cleaner code, clearer documentation, and fewer open questions than it started with.
 
 ---
 
 ## Quick Start
+
 ### Installation
 
 ```bash
@@ -54,14 +59,49 @@ The `ship` skill automatically executes:
 1. `audit` — Gap-checks the prompt and formulates default assumptions.
 2. `plan` — Decomposes the task into RED -> GREEN -> REFACTOR subtasks.
 3. `build` — Dispatches worker subagents to write failing tests, pass them, and submit to an independent reviewer subagent.
-4. `verify` — Runs the complete test suite and verifies line-by-line implementation against the plan.
-5. `wrap-up` — Presents final integration choices (merge, pull request, park, or rollback).
+4. `review` — Independent diff review before verification. Catches spec deviations, security holes, and over-engineering.
+5. `verify` — Runs the complete test suite and verifies line-by-line implementation against the plan.
+6. `deliver` — Presents final integration choices (merge, pull request, park, or rollback).
+
+---
+
+## Pipeline Architecture
+
+The execution pipeline follows a strict, sequential flow supported by standalone tools and system primitives:
+
+```mermaid
+flowchart TD
+    A["orient<br>Codebase Map & Arch Check"] --> B["audit<br>Prompt Gap-Check"]
+    B --> C["plan<br>File-Mapped TDD Decomposition"]
+    C --> D["build<br>Subagent TDD Execution"]
+    D --> R["review<br>Independent Diff Review"]
+    R --> E["verify<br>Empirical Test Verification"]
+    E -->|Pass| F["deliver<br>Merge / PR / Park / Rollback"]
+    E -->|Fail| G["debug<br>Auto-Triage & Isolation"]
+    G --> D
+
+    subgraph Autonomous Acceleration
+        H["ship<br>Full Pipeline Execution"] -.-> A
+    end
+
+    subgraph Session & Ideation Tools
+        I["context<br>Session Compression"]
+        J["diverge<br>Multi-Frame Ideation"]
+        K["trim<br>Over-Engineering Audit"]
+        L["debt<br>Harvest ponytail: Debt"]
+        N["retrospective<br>Post-Verify Reflection"]
+    end
+
+    subgraph Concurrency System
+        M["handoff<br>Same-Turn Subagent Dispatch"]
+    end
+    D <--> M
+    G <--> M
+```
 
 ---
 
 ## Comparison with Existing Frameworks
-
-Ambrosia bridges the specific functional gaps found across individual tooling approaches:
 
 | Feature / Metric | Superpowers | GSD (Get Shit Done) | GStack | Ambrosia |
 |---|---|---|---|---|
@@ -72,64 +112,32 @@ Ambrosia bridges the specific functional gaps found across individual tooling ap
 | **YAGNI / Debt Audit** | No | No | No | Yes (`trim` engine & `debt` ledger) |
 | **State Persistence** | Transient | Markdown Specs | Terminal State | Portable `.ambrosia/ambrosia.log.md` |
 | **Natural Language Routing** | CLI Flags | Command Files | Slash Commands | Natural Intent & Semantic Matching |
+| **Post-Verify Reflection** | No | No | No | Yes (`retrospective` skill) |
 
 ---
 
-## Pipeline Architecture
-
-The execution pipeline follows a strict, sequential flow supported by standalone tools and system primitives:
-
-```mermaid
-flowchart TD
-    A[orient<br>Codebase Map & Arch Check] --> B[audit<br>Prompt Gap-Check]
-    B --> C[plan<br>File-Mapped TDD Decomposition]
-    C --> D[build<br>Subagent TDD Execution]
-    D --> E[verify<br>Empirical Test Verification]
-    E -->|Pass| F[wrap-up<br>Merge / PR / Park / Rollback]
-    E -->|Fail| G[debug<br>Auto-Triage & Isolation]
-    G --> D
-
-    subgraph Autonomous Acceleration
-        H[ship<br>Full Pipeline Execution] -.-> A
-    end
-
-    subgraph Session & Ideation Tools
-        I[context<br>Session Compression]
-        J[diverge<br>Multi-Frame Ideation]
-        K[trim<br>Over-Engineering Audit]
-        L[debt<br>Harvest ponytail: Debt]
-    end
-
-    subgraph Concurrency System
-        M[handoff<br>Same-Turn Subagent Dispatch]
-    end
-    D <--> M
-    G <--> M
-```
-
----
-
-## Skill Reference (15 Skills)
+## Skill Reference (16 Skills)
 
 ### Spine (Pipeline Execution)
 * **`plan`**: Decomposes tasks into atomic RED -> GREEN -> REFACTOR implementation tasks with exact file locations and interface definitions.
 * **`build`**: Executes plans using isolated subagents. Enforces strict TDD and dispatches an independent reviewer subagent for every task.
+* **`review`**: First-class pipeline stage. Independent diff review after build, before verify. Checks spec compliance, security, correctness, and over-engineering.
 * **`verify`**: Enforces the empirical verification rule. Runs the test suite and verifies each plan requirement at a specific `file:line`.
-* **`wrap-up`**: Handles branch integration. Runs tests, checks technical debt, prompts for YAGNI trimming, scans for sensitive tokens, and presents local merge, pull request, park, or rollback options.
+* **`deliver`**: Handles branch integration. Runs tests, checks technical debt, prompts for YAGNI trimming, scans for sensitive tokens, and presents local merge, pull request, park, or rollback options.
 
 ### Tools
 * **`orient`**: Scans and maps codebases. Supports `orient` (full map to `.ambrosia/orient.md`), `orient <path>` (scoped module scan), and `orient audit` (high-bar architectural audit to `.ambrosia/architecture.md`).
 * **`audit`**: Interrogates raw prompts, rates clarity, formulates default assumptions for minor gaps, and tags parallel-safe tasks.
 * **`debug`**: 4-phase root-cause debugging engine (Reproduce -> Isolate -> Hypothesize -> Fix). Includes automatic failure triage when invoked without a stack trace.
 * **`diverge`**: Multi-frame ideation tool. Runs isolated cognitive frames (*Regulator*, *Compiler*, *Archaeologist*, *Hardware*) in parallel to evaluate complex architectural decisions without anchoring bias.
-* **`review`**: Standalone code reviewer for diffs or commit ranges. Matches natural focus goals (e.g., security, performance).
 * **`trim`**: YAGNI auditor. Identifies dead code, reinvented standard library routines, and unnecessary abstractions. Hard two-step gate: reports findings first, applies cuts only on explicit approval.
 * **`debt`**: Greps repository for `// ponytail: <what> | ceiling: <limit> | upgrade: <trigger>` comments and outputs a tracked technical debt ledger.
 * **`context`**: Session compression tool. Writes current status, completed tasks, and blockers to `.ambrosia/context.md` and generates a clean resume prompt for switching context windows.
+* **`retrospective`**: Post-verify reflection skill. Surfaces what surprised the agent, what assumptions were wrong, and whether patterns should be codified for future tasks.
 
 ### Meta & System
 * **`using-ambrosia`**: Suite introduction, orientation, and standing behavioral orders.
-* **`ship`**: Full pipeline accelerator. Executes `audit -> plan -> build -> verify -> wrap-up` in one continuous session.
+* **`ship`**: Full pipeline accelerator. Executes `audit -> plan -> build -> review -> verify -> deliver` in one continuous session.
 * **`handoff`**: System-level concurrency primitive. Dispatches multiple subagents in the same response turn for true parallel execution.
 
 ---
@@ -147,16 +155,11 @@ flowchart TD
 
 Ambrosia is a synthesis of concepts from several open-source agent frameworks:
 
-* **[obra/superpowers](https://github.com/obra/superpowers):** Provides the core methodology backbone—strict TDD discipline (RED -> GREEN -> REFACTOR), task-level subagent isolation, file-mapped implementation plans, and independent review gates.
+* **[obra/superpowers](https://github.com/obra/superpowers):** Provides the core methodology backbone — strict TDD discipline (RED -> GREEN -> REFACTOR), task-level subagent isolation, file-mapped implementation plans, and independent review gates.
 * **[uditakhourii/adhd](https://github.com/uditakhourii/adhd):** Provides the foundation for the `diverge` skill. It uses isolated cognitive frames (*Hardware*, *Compiler*, *Regulator*, *Archaeologist*) running in parallel to prevent anchoring bias during design decisions.
 * **[open-gsd/gsd-core](https://github.com/open-gsd/gsd-core):** Provides the context-rot defense model. Inspires Ambrosia's `.ambrosia/` workspace directory, coordinator context compression, append-only log spine (`ambrosia.log.md`), and session resume snapshots (`context`).
 * **[mattpocock/skills](https://github.com/mattpocock/skills):** Inspires the skill configuration standard (`SKILL.md`), parameter passing conventions, and clear separation between model-invoked primitives (`handoff`) and user-facing tools.
 * **[safishamsi/ponytail](https://github.com/safishamsi/ponytail):** Provides the YAGNI auditing principles used by `trim` and `debt`, introducing the structured `// ponytail:` comment format for tracking deliberate technical debt.
----
-
-## Development Note
-
-This codebase and documentation were developed using AI agent pair-programming workflows ("vibe coding"). While the development process was AI-assisted, the suite enforces deterministic state logging, strict TDD gates, isolated subagent contexts, and empirical test verification to ensure reliability and correctness in real-world software projects.
 
 ---
 
