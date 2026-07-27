@@ -109,7 +109,7 @@ flowchart TD
 
 ---
 
-## Skill Reference (14 Skills)
+## Skill Reference (15 Skills)
 
 ### Spine (Pipeline Execution)
 * **`plan`**: Decomposes tasks into atomic RED -> GREEN -> REFACTOR implementation tasks with exact file locations and interface definitions.
@@ -128,6 +128,7 @@ flowchart TD
 * **`context`**: Session compression tool. Writes current status, completed tasks, and blockers to `.ambrosia/context.md` and generates a clean resume prompt for switching context windows.
 
 ### Meta & System
+* **`using-ambrosia`**: Suite introduction, orientation, and standing behavioral orders.
 * **`ship`**: Full pipeline accelerator. Executes `audit -> plan -> build -> verify -> wrap-up` in one continuous session.
 * **`handoff`**: System-level concurrency primitive. Dispatches multiple subagents in the same response turn for true parallel execution.
 
