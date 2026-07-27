@@ -108,3 +108,11 @@ Append to `ambrosia.log.md`:
 ```
 <timestamp> [<session-tag>] [diverge] <mode> — <N> frames, top idea: <one-line summary>
 ```
+
+---
+
+## Output Contract
+
+**Produces:** Top 3 deepened ideas with weighted scores, cluster labels, and flagged traps. `ambrosia.log.md` entry appended.
+**Next skill:** User picks from presented options — typically hands off to `plan`, `audit`, or `debug` depending on context.
+**Failure conditions:** Self-judge gate fails (answer directly without running frames). All frames produce the same idea (flag convergence, reduce frame count or reframe the problem). Agent dispatch unavailable (run frames sequentially inline, note degraded parallelism).

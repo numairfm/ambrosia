@@ -102,3 +102,11 @@ Append to `ambrosia.log.md`:
 ```
 <timestamp> [<session-tag>] [review] <verdict> — <N> critical, <M> important, <K> minor — <commit range>
 ```
+
+---
+
+## Output Contract
+
+**Produces:** Structured findings list with severity ratings (Critical / Important / Minor). Optional `.ambrosia/review-<timestamp>-findings.md` if fixes deferred. `ambrosia.log.md` entry appended.
+**Next skill:** `verify` — run the test suite and confirm plan compliance after review is clean.
+**Failure conditions:** Diff is empty (report and stop). Reviewer subagent returns empty output (treat as BLOCKED). Critical findings unresolved — do not proceed to verify until addressed or explicitly skipped.

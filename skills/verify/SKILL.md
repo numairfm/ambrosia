@@ -137,3 +137,11 @@ Automatically hand off exact failure context to `debug` for root cause investiga
 - About to move forward without evidence
 - Trusting agent success reports without independent check
 - Partial verification ("I checked the main path")
+
+---
+
+## Output Contract
+
+**Produces:** `[verify] clean — checkpoint: <hash>` entry in `ambrosia.log.md`. All requirements verified at specific `file:line`. Rollback hash recorded.
+**Next skill:** `deliver` — present integration options once verify is clean. Optionally run `trim` first.
+**Failure conditions:** Any test fails (route to `debug`, do not proceed). Any plan requirement unverified (mark as FAIL, do not claim complete). Build command fails (report both test and build status).

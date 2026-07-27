@@ -122,3 +122,11 @@ Append to `ambrosia.log.md`:
 ```
 
 Note any findings that were reviewed but not cut — they are recorded in `.ambrosia/trim-decline.md`.
+
+---
+
+## Output Contract
+
+**Produces:** Confirmed cuts committed (if any). Declined findings recorded in `.ambrosia/trim-decline.md`. `ambrosia.log.md` entry appended.
+**Next skill:** `deliver` — trim is the last optional cleanup step before integration.
+**Failure conditions:** A confirmed cut breaks a test (stop, report which cut caused the failure, ask to revert or fix). User does not confirm (record all findings to decline ledger and stop without changes).

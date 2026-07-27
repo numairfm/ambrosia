@@ -133,3 +133,11 @@ Resume prompt above is ready to paste into a fresh session.
 
 Rot signals: <N found | none>
 ```
+
+---
+
+## Output Contract
+
+**Produces:** `.ambrosia/context.md` snapshot. Resume prompt posted visibly in chat. Rot signals flagged.
+**Next skill:** None — this skill is invoked to switch sessions. The resume prompt is the hand-off artifact.
+**Failure conditions:** `ambrosia.log.md` is missing (report that log is absent — snapshot will be incomplete). Git is unavailable (skip git-based fields and note the gap).

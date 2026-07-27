@@ -72,3 +72,10 @@ On confirmation:
 - **Feature / Code Change:** Invoke `plan` with the refined prompt.
 - **Code Review / Inspection / Research:** Proceed directly to execute the task using the refined prompt and stated default assumptions.
 
+---
+
+## Output Contract
+
+**Produces:** Refined prompt(s) in a fenced code block with explicit default assumptions listed. `ambrosia.log.md` entry appended with score and parallel-safety tag.
+**Next skill:** `plan` (for feature work) or direct execution (for reviews/inspections).
+**Failure conditions:** Critical holes exist that cannot be covered by sensible defaults — ask the user before proceeding. Never invent verifiable external claims.

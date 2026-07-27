@@ -122,3 +122,11 @@ Append to `ambrosia.log.md`:
 ```
 
 Then recommend running `verify` to confirm no regressions.
+
+---
+
+## Output Contract
+
+**Produces:** Root cause documented in `ambrosia.log.md` with file:line location and confirming test name. Fix committed.
+**Next skill:** `verify` — re-run the full test suite to confirm no regressions introduced by the fix.
+**Failure conditions:** 3+ fix attempts failed (stop — escalate to `diverge` for architectural re-evaluation). Fix works locally but breaks unrelated tests (do not merge, investigate regression first). Root cause not found after full data-flow trace (document uncertainty, ask user before guessing).

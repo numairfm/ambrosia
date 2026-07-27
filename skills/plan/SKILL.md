@@ -166,3 +166,11 @@ Append to `ambrosia.log.md`:
 ```
 <timestamp> [<session-tag>] [plan] complete — <N> tasks, <M> parallel-safe — .ambrosia/plans/<filename>
 ```
+
+---
+
+## Output Contract
+
+**Produces:** `.ambrosia/plans/<YYYY-MM-DD>-<slug>.md` with file-mapped, parallel-safety-tagged TDD tasks. `ambrosia.log.md` entry appended.
+**Next skill:** `build` — execute the plan task-by-task with isolated worker subagents.
+**Failure conditions:** Plan requires > 10 tasks (split into phases first). Placeholder content detected in self-review (fix inline before handing off). Research subagent returns empty output (treat as BLOCKED).

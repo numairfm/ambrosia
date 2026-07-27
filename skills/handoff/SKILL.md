@@ -105,3 +105,11 @@ Agent harnesses cannot pause mid-turn to poll a wall clock. If a dispatched suba
 ## Context isolation invariant
 
 Branches that see each other's output anchor each other — the whole parallelism benefit collapses. Enforce zero cross-contamination between dispatched subagents. The coordinator integrates; the workers never see each other.
+
+---
+
+## Output Contract
+
+**Produces:** All dispatched subagent report files (`.ambrosia/handoff-<label>-report.md`). Integrated changes committed (if applicable). `.ambrosia/handoff-manifest.md` deleted on successful integration. `ambrosia.log.md` entry appended.
+**Next skill:** Returns control to the calling skill (`build`, `verify`, or `debug`) — handoff is not user-invoked.
+**Failure conditions:** Any subagent returns empty report (treat as BLOCKED — do not integrate). Conflict detected between subagent outputs (surface to user before merging anything). Subagent has not returned by next coordinator response (ask user to wait or abort and re-dispatch).

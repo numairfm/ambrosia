@@ -161,3 +161,11 @@ Orientation complete. Key findings:
 
 Ready to start work? Run `audit` with your task.
 ```
+
+---
+
+## Output Contract
+
+**Produces:** `.ambrosia/orient.md` (full) or `.ambrosia/architecture.md` (audit mode). `ambrosia.log.md` entry appended.
+**Next skill:** `audit` — pass the task description to gap-check before planning.
+**Failure conditions:** No readable source files found (report and stop). AGENTS.md missing (create stub and prompt to fill).

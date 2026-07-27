@@ -228,3 +228,11 @@ If findings: dispatch ONE fix subagent with the complete findings list. One scop
 
 Recommend: run `review` next, then `verify`.
 
+---
+
+## Output Contract
+
+**Produces:** All plan tasks implemented and committed on `ambrosia/<slug>`. `.ambrosia/build/task-<N>-report.md` for each task. `ambrosia.log.md` entry appended. MERGE_BASE recorded.
+**Next skill:** `review` — independent diff review of the full branch before empirical verification.
+**Failure conditions:** Fix-loop exhausted after 5 rounds (stop and escalate to user with menu). Implementer subagent returns empty report (treat as BLOCKED, re-dispatch once). Build command fails after implementation (stop, do not proceed to review).
+

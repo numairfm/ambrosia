@@ -82,3 +82,11 @@ Append to `ambrosia.log.md`:
 ```
 <timestamp> [<session-tag>] [debt] <N> markers found, <M> no-trigger
 ```
+
+---
+
+## Output Contract
+
+**Produces:** Formatted debt ledger in chat output. `ambrosia.log.md` entry appended. No file modifications.
+**Next skill:** None — this is a report-only skill. User decides whether to address debt items now or defer.
+**Failure conditions:** No source files found to scan (report and stop). Grep command unavailable (fall back to manual pattern scan of key files and note degraded coverage).
