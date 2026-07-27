@@ -51,10 +51,10 @@ Active for all sessions once Ambrosia is loaded:
 3. **Lite-Diverge:** Before answering open-ended design/architecture questions, route through `diverge`'s self-judge gate (open-ended? high-stakes? open phrasing? — abort if any fails). Gate passes → run lite-diverge (3 frames internally, surface top choice). Gate fails → answer directly. Do not silently run lite-diverge on questions that `diverge.md`'s gate would reject.
 4. **Ponytail Leanness (YAGNI):** Prefer native stdlib/platform solutions over new abstractions. Tag deliberate shortcuts with `// ponytail: <what was simplified> | ceiling: <limit> | upgrade: <trigger>`.
 5. **Web Search Grounding:** Verify external API/library assumptions before building. Mark unverified claims as `[UNVERIFIED]`.
-6. **Fast-Path Routing:** Mode check before executing:
-   - **Question/Lookup** → Answer directly
-   - **Small Single-File Task** → Fix directly + test
-   - **Multi-Step Goal/Feature** → Pipeline (`audit` → `plan` → `build` → `verify`)
+6. **Prompt Audit & Routing:** Mode check before executing:
+   - **Direct Answer / Exact Lookup:** Precise single-answer questions → answer directly.
+   - **Rough, Open-Ended, or Multi-Faceted Tasks:** Any prompt with missing parameters, unstated assumptions, or open options (including codebase reviews, refactors, and features) → run `audit` first to refine prompt clarity, score it, and state assumed defaults before executing (either passing to `plan` or executing direct inspection).
+   - **Multi-Step Feature / Goal:** Full pipeline (`audit` → `plan` → `build` → `verify`).
 7. **Prerequisite Enforcement:** Spine skills check `ambrosia.log.md` state. Say `<skill> force` (e.g. `plan force`, `build force`) to bypass.
 8. **Log Security:** Omit/redact credentials, tokens, or keys in `ambrosia.log.md`.
 9. **Natural Language Modes:** Skills use space-separated mode words, not CLI flags (e.g. `diverge full`, not `diverge --full`). The `--` forms are accepted as fallbacks but not preferred.
