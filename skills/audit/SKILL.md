@@ -22,7 +22,7 @@ Score the prompt silently (0-2 each, max 10):
 4. **No bundling** (single coherent task)
 5. **No ungrounded claims** (verified external assumptions)
 
-- **Score ≥ 8:** Announce "Prompt is clear (score <N>/10) — proceeding directly to plan." Then write final prompt (Step 3).
+- **Score ≥ 8:** Announce "Prompt is clear (score <N>/10) — proceeding to plan or execution." Then write final prompt (Step 3).
 - **Score < 8:** Proceed to Step 1.
 
 ---
@@ -41,11 +41,11 @@ If critical holes exist that change what gets built, ask concise, batched questi
 If defaults cover the gaps, present the prompt along with assumed defaults for 1-turn approval:
 
 ```
-Assumed defaults (carry this list to the plan summary):
+Assumed defaults (carry this list to the plan summary or inspection brief):
 - [Default 1]
 - [Default 2]
 
-Reply 'go' to accept and hand off to plan, or specify changes.
+Reply 'go' to accept and proceed, or specify changes.
 ```
 
 ---
@@ -62,11 +62,13 @@ If bundled, split into `Prompt 1 of N`, `Prompt 2 of N`. Tag parallel-safe items
 
 ---
 
-## Step 5 — Pass to Plan
+## Step 5 — Handoff (Plan or Direct Execution)
 
 Append to `ambrosia.log.md`:
 ```
 <timestamp> [<session-tag>] [audit] complete — <N> prompt(s) produced (score: <N>/10), parallel-safe: <yes/no>
 ```
-On confirmation, invoke `plan` with the prompt.
+On confirmation:
+- **Feature / Code Change:** Invoke `plan` with the refined prompt.
+- **Code Review / Inspection / Research:** Proceed directly to execute the task using the refined prompt and stated default assumptions.
 
