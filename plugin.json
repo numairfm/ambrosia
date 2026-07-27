@@ -1,22 +1,23 @@
 {
   "name": "ambrosia",
-  "version": "0.1.0",
-  "description": "A self-contained AI coding skill suite. Structurally inspired by obra/superpowers, mattpocock/skills, UditAkhourii/adhd, and open-gsd/gsd-core — dependent on none of them.",
+  "version": "0.2.0",
+  "description": "An opinionated software engineering operating system for AI coding agents. Enforces context isolation, evidence-based verification, and structured pipeline execution across LLM harnesses.",
   "skills": [
     "skills/using-ambrosia",
     "skills/orient",
     "skills/audit",
     "skills/plan",
     "skills/build",
+    "skills/review",
     "skills/verify",
     "skills/debug",
     "skills/diverge",
     "skills/handoff",
-    "skills/review",
     "skills/ship",
     "skills/context",
     "skills/trim",
     "skills/debt",
-    "skills/wrap-up"
+    "skills/deliver",
+    "skills/retrospective"
   ]
 }

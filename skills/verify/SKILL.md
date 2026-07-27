@@ -1,6 +1,6 @@
 ---
 name: verify
-description: Confirm work is actually done — evidence-based, plan-checked. Runs the full test suite, checks output against the plan line by line, stamps a clean checkpoint. Routes failures through debug (which decides if handoff is appropriate). Use after build, before trim or wrap-up.
+description: Confirm work is actually done — evidence-based, plan-checked. Runs the full test suite, checks output against the plan line by line, stamps a clean checkpoint. Routes failures through debug (which decides if handoff is appropriate). Use after review, before trim or deliver.
 ---
 
 # Verify
@@ -105,7 +105,7 @@ Verify passed.
   Plan: <N>/<N> requirements verified
   Checkpoint: <short-hash>
 
-Ready for `trim` and `wrap-up`.
+Ready for `trim` and `deliver`.
 ```
 
 **Not clean:**

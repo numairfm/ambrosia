@@ -17,7 +17,7 @@ Save the current session state and produce a clean resume prompt. Prevents conte
 - You're switching to a different terminal, machine, or agent session
 - You want a clean handoff to a fresh context window mid-task
 - The log is large and coordinator compression in `build` isn't enough
-- After parking (`wrap-up` option 4) to produce a richer resume prompt
+- After parking (`deliver` option 4) to produce a richer resume prompt
 
 ---
 
@@ -43,7 +43,7 @@ Created: <ISO timestamp>
 Session: <conversation ID or "unknown">
 
 ## Current state
-Phase: <orient | audit | plan | build | verify | debug | wrap-up | ad-hoc>
+Phase: <orient | audit | plan | build | review | verify | debug | deliver | ad-hoc>
 Branch: <current git branch>
 Last checkpoint: <hash from ambrosia.log.md, or "none">
 

@@ -71,7 +71,7 @@ Highlight no-trigger items separately:
 ## When to use
 
 - Run explicitly any time you want to audit accumulated debt
-- `wrap-up` automatically runs `debt` before presenting the branch completion menu
+- `deliver` automatically runs `debt` before presenting the branch completion menu
 - Recommended: run `debt` at the start of a new feature that touches an area with known shortcuts
 
 ---

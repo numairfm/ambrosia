@@ -87,7 +87,7 @@ If the branch already exists (resuming a session / Step 1/bootstrap):
 ```bash
 git merge-base main HEAD
 ```
-Store this — `wrap-up` needs it for the final review package.
+Store this — `deliver` needs it for the final review package.
 
 ---
 
@@ -100,7 +100,7 @@ If the user types `pause` at any point during the task loop:
 - Post to chat: "Build paused after Task <N>. <M> tasks remain. Say `build resume` to continue."
 - Stop. Do not proceed to the next task.
 
-This is distinct from `wrap-up`'s park option — pause is mid-build; park is end-of-branch.
+This is distinct from `deliver`'s park option — pause is mid-build; park is end-of-branch.
 
 ---
 
@@ -226,4 +226,5 @@ If findings: dispatch ONE fix subagent with the complete findings list. One scop
 <timestamp> [<session-tag>] [build] complete — <N> tasks, branch ambrosia/<slug>, final review clean
 ```
 
-Recommend: run `verify` next.
+Recommend: run `review` next, then `verify`.
+
