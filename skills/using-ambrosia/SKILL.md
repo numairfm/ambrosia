@@ -81,4 +81,4 @@ Apply for: execution mode, model tier overrides, fix-loop escalation choices, re
 - Stating a new project goal automatically triggers `audit`.
 - If `.ambrosia/PARKED.md` exists, prompt to resume the parked session immediately.
 - If `.ambrosia/context.md` exists from a previous session, read it before doing anything else.
-
+- After `deliver` closes out a significant branch, consider running `retrospective` to capture learning before starting the next task.
