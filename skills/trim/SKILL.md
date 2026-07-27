@@ -70,13 +70,16 @@ If nothing to cut:
 ```
 Lean already. Zero cuts identified.
 ```
-Append `[<session-tag>] [trim] clean` to `ambrosia.log.md` and complete automatically.
+Append `<timestamp> [<session-tag>] [trim] clean` to `ambrosia.log.md` and complete automatically.
 
 If cuts exist, present the cut list and prompt for single-turn confirmation:
-```
+
 Review cut list above.
-Reply 'confirm' or 'confirm 1,3' to apply, or 'skip' to cancel.
-```
+- **`confirm`** — Apply all cuts.
+- **`confirm 1,3`** — Apply only specific numbered cuts.
+- **`skip`** — Cancel without making changes.
+
+*Reply with 'confirm', 'confirm 1,3', or 'skip'.*
 
 Do NOT modify files until confirmation is received.
 
@@ -99,8 +102,13 @@ For each confirmed cut:
 2. Run the full test suite to confirm nothing broke
 3. If a test breaks: stop, report which test and which cut caused it, ask whether to revert that cut or fix the test
 
-Commit confirmed cuts together:
+Stage confirmed cuts:
 ```bash
+git add <trimmed-files>
+```
+
+Then output this command to chat for the user to run:
+```
 git commit -m "ambrosia(trim): remove over-engineering — <N> cuts"
 ```
 

@@ -13,7 +13,7 @@ Decompose the task into a concrete implementation plan. Research happens in a fr
 
 ## Pre-flight
 
-**1. Prerequisite check.** Read `ambrosia.log.md`. If no `[audit]` entry exists for this task AND `force` (or `--force`) was not passed:
+**1. Prerequisite check.** Read `ambrosia.log.md`. If no `[audit]` or `[orient]` entry exists for this task AND `force` (or `--force`) was not passed:
 ```
 No audit found for this task. Run `audit` first to gap-check the prompt, or say `plan force` to plan directly.
 ```
@@ -50,8 +50,12 @@ Never have research modify source files.
 
 Before decomposing into files and tasks, write a 3-5 sentence prose sketch of the intended architecture — major components, how they connect, the load-bearing design decision. Post this as a visible ping.
 
-- Task scored ≥ 6 in audit → continue immediately after posting
-- Task scored < 6 in audit → make this a gate: wait for the user to confirm the shape before proceeding to Step 2
+Determine the audit score:
+- If the score is in the current session context, use it directly.
+- Otherwise, read it from the most recent `[audit]` log entry in `ambrosia.log.md` — it is recorded as `(score: <N>/10)`.
+
+- Score ≥ 6 → continue immediately after posting the sketch
+- Score < 6 → gate: wait for user to confirm the shape before proceeding to Step 2
 
 ---
 
@@ -160,5 +164,5 @@ Assumed defaults (from audit):
 
 Append to `ambrosia.log.md`:
 ```
-<timestamp> [plan] complete — <N> tasks, <M> parallel-safe — .ambrosia/plans/<filename>
+<timestamp> [<session-tag>] [plan] complete — <N> tasks, <M> parallel-safe — .ambrosia/plans/<filename>
 ```

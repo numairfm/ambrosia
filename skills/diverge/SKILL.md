@@ -106,5 +106,5 @@ For any idea that looks attractive but is a trap (hidden cost, false economy, wo
 
 Append to `ambrosia.log.md`:
 ```
-<timestamp> [diverge] <mode> — <N> frames, top idea: <one-line summary>
+<timestamp> [<session-tag>] [diverge] <mode> — <N> frames, top idea: <one-line summary>
 ```

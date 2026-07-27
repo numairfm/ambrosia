@@ -148,7 +148,7 @@ If AGENTS.md doesn't exist: create a minimal stub now —
 
 Append to `ambrosia.log.md`:
 ```
-<timestamp> [orient] complete — orientation written to .ambrosia/orient.md
+<timestamp> [<session-tag>] [orient] complete — orientation written to .ambrosia/orient.md
 ```
 
 Report:

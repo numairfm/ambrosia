@@ -118,7 +118,7 @@ After root cause found and fix verified:
 
 Append to `ambrosia.log.md`:
 ```
-<timestamp> [debug] root cause: <one-line description> — fixed in: <file:line> — test: <test name>
+<timestamp> [<session-tag>] [debug] root cause: <one-line description> — fixed in: <file:line> — test: <test name>
 ```
 
 Then recommend running `verify` to confirm no regressions.

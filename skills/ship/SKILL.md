@@ -22,15 +22,13 @@ The only hard gates are: initial task confirmation, plan review (>5 tasks), and 
 **1. Read AGENTS.md.** Project rules take precedence over everything.
 
 **2. Check for parked session.** If `.ambrosia/PARKED.md` exists:
-```
-A parked session exists (branch: <branch>, last: <task>).
-Resume parked session or start fresh?
-  1. Resume parked session — continue from Task <N>
-  2. Start fresh — new task, new branch
 
-Recommended: 1. Resume parked — you have unfinished work.
-Proceeding with option 1. Say '2' to start fresh instead.
-```
+A parked session exists (branch: `<branch>`, last: `<task>`).
+- **[1] Resume parked session (Recommended)** — Pick up at Stage `<N>`.
+- **[2] Discard parked session** — Start fresh.
+
+*Recommendation: Option 1 — pick up where previous session left off.*  
+*Reply with option number (or press Enter for recommended).*
 
 **3. Task intake.** If `$ARGUMENTS` is empty, ask once:
 ```
@@ -85,5 +83,5 @@ State saved. Resume with `build resume` or investigate with `debug`.
 
 Append to `ambrosia.log.md`:
 ```
-<timestamp> [ship] complete — <N> tasks — branch: <branch>
+<timestamp> [<session-tag>] [ship] complete — <N> tasks — branch: <branch>
 ```

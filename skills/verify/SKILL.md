@@ -86,7 +86,7 @@ If and only if:
 
 Append to `ambrosia.log.md`:
 ```
-<timestamp> [verify] clean — checkpoint: <commit-hash> — <N>/<N> requirements verified
+<timestamp> [<session-tag>] [verify] clean — checkpoint: <commit-hash> — <N>/<N> requirements verified
 ```
 
 

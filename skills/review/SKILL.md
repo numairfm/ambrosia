@@ -100,5 +100,5 @@ Dispatch a scoped re-reviewer on the fix diff only:
 
 Append to `ambrosia.log.md`:
 ```
-<timestamp> [review] <verdict> — <N> critical, <M> important, <K> minor — <commit range>
+<timestamp> [<session-tag>] [review] <verdict> — <N> critical, <M> important, <K> minor — <commit range>
 ```

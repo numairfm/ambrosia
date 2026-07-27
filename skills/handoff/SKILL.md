@@ -35,7 +35,7 @@ To achieve real parallelism, all dispatch calls for this handoff MUST be issued 
 
 Before dispatching, append to `ambrosia.log.md`:
 ```
-<timestamp> [handoff] dispatching <N> agents in parallel — [<item-1-label>, <item-2-label>, ...]
+<timestamp> [<session-tag>] [handoff] dispatching <N> agents in parallel — [<item-1-label>, <item-2-label>, ...]
 ```
 
 ### Step 2 — Construct work tickets
@@ -95,7 +95,7 @@ After all subagents return:
 ### Step 6 — Log completion
 
 ```
-<timestamp> [handoff] <N> agents returned — integrated: <labels> | blocked: <labels if any>
+<timestamp> [<session-tag>] [handoff] <N> agents returned — integrated: <labels> | blocked: <labels if any>
 ```
 
 ## Timeout behavior

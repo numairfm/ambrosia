@@ -110,10 +110,10 @@ After writing the snapshot, check for signs of context rot that should be addres
 
 | Signal | Flag |
 |---|---|
-| `ambrosia.log.md` > 500 lines | ⚠️ Log is large — consider archiving old entries |
-| Any task re-dispatched > 2 times | ⚠️ Fix loop churn — consider `debug` before resuming |
-| Open decisions > 3 | ⚠️ Too many unresolved questions — answer before resuming |
-| Uncommitted changes on 3+ files | ⚠️ Messy working tree — commit or stash before switching sessions |
+| `ambrosia.log.md` > 500 lines | [WARN] Log is large — consider archiving old entries |
+| Any task re-dispatched > 2 times | [WARN] Fix loop churn — consider `debug` before resuming |
+| Open decisions > 3 | [WARN] Too many unresolved questions — answer before resuming |
+| Uncommitted changes on 3+ files | [WARN] Messy working tree — commit or stash before switching sessions |
 
 Report flagged signals, but don't block — these are warnings, not errors.
 
@@ -123,7 +123,7 @@ Report flagged signals, but don't block — these are warnings, not errors.
 
 Append to `ambrosia.log.md`:
 ```
-<timestamp> [context] snapshot written — .ambrosia/context.md — phase: <phase>, <N> tasks remaining
+<timestamp> [<session-tag>] [context] snapshot written — .ambrosia/context.md — phase: <phase>, <N> tasks remaining
 ```
 
 Post:

@@ -30,7 +30,7 @@ This section documents what to do when subagent dispatch is unavailable — not 
 1. Coordinator executes the task inline (edits files directly)
 2. Append to `ambrosia.log.md`:
    ```
-   <timestamp> [build] task-<N> INLINE-FALLBACK — subagent dispatch failed: <reason>
+   <timestamp> [<session-tag>] [build] task-<N> INLINE-FALLBACK — subagent dispatch failed: <reason>
    ```
 3. **Still dispatch an independent reviewer subagent** for the coordinator's diff — the review guarantee is not waived by the fallback
 4. Note the deviation in the final build completion report:
@@ -72,9 +72,9 @@ Present all conflicts as one batched question. If scan is clean, proceed without
 
 ## Setup
 
-**Create the branch:**
+**Create or switch to the branch:**
 ```bash
-git checkout -b ambrosia/<plan-slug>
+git checkout ambrosia/<plan-slug> 2>/dev/null || git checkout -b ambrosia/<plan-slug>
 ```
 
 If the branch already exists (resuming a session / Step 1/bootstrap):
@@ -96,7 +96,7 @@ Store this — `wrap-up` needs it for the final review package.
 If the user types `pause` at any point during the task loop:
 - Finish the **current task only** — do not start the next one
 - Commit and log normally
-- Append to `ambrosia.log.md`: `<timestamp> [build] paused — completed through task-<N>, <M> tasks remaining`
+- Append to `ambrosia.log.md`: `<timestamp> [<session-tag>] [build] paused — completed through task-<N>, <M> tasks remaining`
 - Post to chat: "Build paused after Task <N>. <M> tasks remain. Say `build resume` to continue."
 - Stop. Do not proceed to the next task.
 
@@ -162,25 +162,23 @@ If the reviewer flagged Spec FAIL or Critical/Important Issue:
 
 STOP the task loop. Do not proceed to the next task. Post to chat:
 
-```
-Fix loop exhausted on Task <N> after 5 rounds.
+> Fix loop exhausted on Task \<N\> after 5 rounds.
+>
+> Failure history:  
+>   Round 1: \<one-line summary\>  
+>   Round 2: \<one-line summary\>  
+>   Round 3: \<one-line summary\>  
+>   Round 4: \<one-line summary\>  
+>   Round 5: \<one-line summary\>
 
-Failure history:
-  Round 1: <one-line summary>
-  Round 2: <one-line summary>
-  Round 3: <one-line summary>
-  Round 4: <one-line summary>
-  Round 5: <one-line summary>
+### Fix-Loop Exhaustion Menu:
+- **[1] Invoke `debug` (Recommended)** — Root-cause investigation before retrying.
+- **[2] Invoke `diverge`** — Explore alternative approaches to this task.
+- **[3] Continue build** — Skip this task for now and proceed with remaining plan tasks.
+- **[4] Abort build** — Roll back to last clean checkpoint.
 
-What next?
-  1. Invoke `debug` — root-cause investigation before retrying
-  2. Invoke `diverge` — explore alternative approaches to this task
-  3. Skip this task and continue with remaining plan tasks
-  4. Abort build — roll back to last clean checkpoint
-
-Recommended: 1. Invoke `debug` — fix-loop exhaustion usually signals a misunderstood root cause.
-Proceeding with option 1. Say the number to override.
-```
+*Recommendation: Option 1 — fix-loop exhaustion usually signals a misunderstood root cause.*  
+*Reply with option number (or press Enter for recommended).*
 
 ### 6. Post-fix verification
 
@@ -192,7 +190,7 @@ After any fix loop round succeeds (reviewer approves):
 
 Append to `ambrosia.log.md`:
 ```
-<timestamp> [build] task-<N> complete — commits <base7>..<head7>
+<timestamp> [<session-tag>] [build] task-<N> complete — commits <base7>..<head7>
 ```
 
 **Ping:** Post to chat:
@@ -203,7 +201,7 @@ Append to `ambrosia.log.md`:
 ### 8. Coordinator compression (every 3 tasks)
 
 After every 3 completed tasks, compress the coordinator's in-context summaries:
-- Write a single summary entry to `ambrosia.log.md`: `[build] tasks <N-2> through <N> complete — <one-line summary of what was built>`
+- Write a single summary entry to `ambrosia.log.md`: `<timestamp> [<session-tag>] [build] tasks <N-2> through <N> complete — <one-line summary of what was built>`
 - Drop the accumulated in-context task summaries
 - Continue with the log as the authoritative record
 
@@ -225,7 +223,7 @@ If findings: dispatch ONE fix subagent with the complete findings list. One scop
 ## Completion
 
 ```
-<timestamp> [build] complete — <N> tasks, branch ambrosia/<slug>, final review clean
+<timestamp> [<session-tag>] [build] complete — <N> tasks, branch ambrosia/<slug>, final review clean
 ```
 
 Recommend: run `verify` next.

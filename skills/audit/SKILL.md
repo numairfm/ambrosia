@@ -66,7 +66,7 @@ If bundled, split into `Prompt 1 of N`, `Prompt 2 of N`. Tag parallel-safe items
 
 Append to `ambrosia.log.md`:
 ```
-<timestamp> [audit] complete — <N> prompt(s) produced, parallel-safe: <yes/no>
+<timestamp> [<session-tag>] [audit] complete — <N> prompt(s) produced (score: <N>/10), parallel-safe: <yes/no>
 ```
 On confirmation, invoke `plan` with the prompt.
 

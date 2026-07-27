@@ -70,7 +70,7 @@ grep -iE '(sk-[a-z0-9]{20,}|bearer [a-z0-9]{10,}|password\s*=\s*["\x27][^"]+|pri
 
 If matches found:
 ```
-⚠️ Possible sensitive data in ambrosia.log.md:
+[WARN] Possible sensitive data in ambrosia.log.md:
   [show matches with context]
 
 Review before pushing. The log is gitignored by default. If you've removed .ambrosia/ from .gitignore, address this first.
@@ -101,23 +101,23 @@ Confirm before merging. Merging into the wrong base is expensive to undo.
 
 ## Step 7 — Present options
 
-```
 Work is ready. What would you like to do?
 
-1. Merge to <base-branch> locally
-2. Push and create a Pull Request
-3. Keep the branch as-is (handle later)
-4. Park (save state summary for next session)
-5. Rollback to last clean checkpoint (<short-hash>)
+- **[1] Merge to `<base-branch>` locally**
+- **[2] Push and create a Pull Request**
+- **[3] Keep the branch as-is (handle later)**
+- **[4] Park (save state summary for next session)**
+- **[5] Rollback to last clean checkpoint (`<short-hash>`)**
 
-Which option?
-```
+*Reply with option number (1-5).*
 
 ---
 
 ## Options
 
 ### Option 1 — Merge locally
+
+Before switching branches, ensure working tree is clean (`git status --short`). Then:
 
 ```bash
 git checkout <base-branch>
@@ -199,11 +199,11 @@ Re-run tests to confirm the reset state is clean.
 
 Append to `ambrosia.log.md` (for merge/PR):
 ```
-<timestamp> [wrap-up] <option> — branch: ambrosia/<slug>, base: <base-branch>
+<timestamp> [<session-tag>] [wrap-up] <option> — branch: ambrosia/<slug>, base: <base-branch>
 ```
 
-For park: `[wrap-up] parked — resume via PARKED.md`
-For rollback: `[wrap-up] rolled back to checkpoint <hash>`
+For park: `<timestamp> [<session-tag>] [wrap-up] parked — resume via PARKED.md`
+For rollback: `<timestamp> [<session-tag>] [wrap-up] rolled back to checkpoint <hash>`
 
 ---
 

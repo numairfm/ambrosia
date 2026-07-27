@@ -17,12 +17,13 @@ Grep the full repository for ponytail comment markers:
 
 ```bash
 grep -rnE '(#|//|--|<!--|;) ?ponytail:' . \
-  --include="*.js" --include="*.ts" --include="*.py" \
-  --include="*.rs" --include="*.go" --include="*.rb" \
-  --include="*.java" --include="*.swift" --include="*.kt" \
-  --include="*.css" --include="*.html" --include="*.md" \
-  | grep -v node_modules | grep -v ".git" | grep -v "build/" \
-  | grep -v "dist/" | grep -v "target/"
+  --include="*.js" --include="*.jsx" --include="*.ts" --include="*.tsx" \
+  --include="*.py" --include="*.rs" --include="*.go" --include="*.rb" \
+  --include="*.java" --include="*.swift" --include="*.kt" --include="*.c" \
+  --include="*.cpp" --include="*.cs" --include="*.sh" --include="*.yaml" \
+  --include="*.sql" --include="*.css" --include="*.html" --include="*.md" \
+  --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=build \
+  --exclude-dir=dist --exclude-dir=target
 ```
 
 Also check for common variations: `ponytail:`, `// ponytail:`, `# ponytail:`.
@@ -42,8 +43,10 @@ Group by file. For each marker:
 
 End with:
 ```
-Total markers: <N>
-No-trigger (will rot silently): <M>
+Ponytail Debt Audit
+  Total markers: <N>
+  Ceiling breached: <M> [WARN]
+  No-trigger: <K> [WARN]
 ```
 
 If no markers found:
@@ -59,7 +62,7 @@ Any marker that names no upgrade path or trigger condition is tagged `no-trigger
 
 Highlight no-trigger items separately:
 ```
-⚠️ No-trigger items (need an upgrade condition added):
+[WARN] No-trigger items (need an upgrade condition added):
   <file>:<line> — <description>
 ```
 
@@ -77,5 +80,5 @@ Highlight no-trigger items separately:
 
 Append to `ambrosia.log.md`:
 ```
-<timestamp> [debt] <N> markers found, <M> no-trigger
+<timestamp> [<session-tag>] [debt] <N> markers found, <M> no-trigger
 ```
