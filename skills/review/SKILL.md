@@ -1,11 +1,11 @@
 ---
 name: review
-description: Standalone code review. Reads a diff or the current working changes, dispatches a reviewer subagent, returns findings with severity ratings. Usable any time — not just inside the build pipeline. Use when you want a second opinion on code, before a PR, after a big refactor, or when build's built-in review isn't enough.
+description: "First-class pipeline stage. Independent diff review after build, before verify. Checks spec compliance, correctness, security, performance, and over-engineering. Also usable standalone at any time — before a PR, after a big refactor, or when you want a second opinion on any diff."
 ---
 
 # Review
 
-Get a rigorous code review on any diff. Not just "does this look right" — spec compliance, quality, correctness, and a concrete list of findings you can act on.
+Get a rigorous code review on any diff — not just "does this look right" but spec compliance, security, correctness, and a concrete list of findings you can act on.
 
 **Announce:** "Using the review skill."
 

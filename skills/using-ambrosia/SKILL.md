@@ -5,7 +5,7 @@ description: Ambrosia suite introduction, orientation, and session bootstrap. Re
 
 # Ambrosia
 
-A self-contained, high-performance AI coding skill suite. Built for context-rot resistance, maximum execution speed, and token efficiency.
+An opinionated software engineering operating system for AI coding agents. Not a prompt pack. Not a utility collection. A mental model for how AI agents should engineer software — with context isolation, evidence-based verification, and a structured execution pipeline.
 
 **Core Guarantees:**
 - Context rot resistance (fresh-context subagents + append-only `ambrosia.log.md`)
