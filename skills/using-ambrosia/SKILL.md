@@ -82,3 +82,11 @@ Apply for: execution mode, model tier overrides, fix-loop escalation choices, re
 - If `.ambrosia/PARKED.md` exists, prompt to resume the parked session immediately.
 - If `.ambrosia/context.md` exists from a previous session, read it before doing anything else.
 - After `deliver` closes out a significant branch, consider running `retrospective` to capture learning before starting the next task.
+
+---
+
+## Output Contract
+
+**Produces:** Standing behavioral orders activated for the session. Session tag generated. Bootstrap state read from `.ambrosia/`. No files written.
+**Next skill:** `orient` (unfamiliar codebase) or `audit` (task ready to run).
+**Failure conditions:** None — this skill is always safe to invoke. If `.ambrosia/` does not exist, it will be initialized on the first downstream skill run.
