@@ -89,7 +89,7 @@ flowchart TD
         J["diverge<br>Multi-Frame Ideation"]
         K["trim<br>Over-Engineering Audit"]
         L["debt<br>Harvest ponytail: Debt"]
-        N["retrospective<br>Post-Verify Reflection"]
+        N["reflect<br>Post-Delivery Reflection"]
     end
 
     subgraph Concurrency System
@@ -112,7 +112,7 @@ flowchart TD
 | **YAGNI / Debt Audit** | No | No | No | Yes (`trim` engine & `debt` ledger) |
 | **State Persistence** | Transient | Markdown Specs | Terminal State | Portable `.ambrosia/ambrosia.log.md` |
 | **Natural Language Routing** | CLI Flags | Command Files | Slash Commands | Natural Intent & Semantic Matching |
-| **Post-Verify Reflection** | No | No | No | Yes (`retrospective` skill) |
+| **Post-Verify Reflection** | No | No | No | Yes (`reflect` skill) |
 
 ---
 
@@ -133,7 +133,7 @@ flowchart TD
 * **`trim`**: YAGNI auditor. Identifies dead code, reinvented standard library routines, and unnecessary abstractions. Hard two-step gate: reports findings first, applies cuts only on explicit approval.
 * **`debt`**: Greps repository for `// ponytail: <what> | ceiling: <limit> | upgrade: <trigger>` comments and outputs a tracked technical debt ledger.
 * **`context`**: Session compression tool. Writes current status, completed tasks, and blockers to `.ambrosia/context.md` and generates a clean resume prompt for switching context windows.
-* **`retrospective`**: Post-verify reflection skill. Surfaces what surprised the agent, what assumptions were wrong, and whether patterns should be codified for future tasks.
+* **`reflect`**: Post-delivery reflection skill. Distills durable lessons, reusable patterns, and tracked technical debt into a 3-pillar summary.
 
 ### Meta & System
 * **`using-ambrosia`**: Suite introduction, orientation, and standing behavioral orders.

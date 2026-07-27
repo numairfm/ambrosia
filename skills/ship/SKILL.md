@@ -98,5 +98,5 @@ Append to `ambrosia.log.md`:
 ## Output Contract
 
 **Produces:** Fully delivered branch (merged, PR open, or parked). `ambrosia.log.md` entry appended.
-**Next skill:** `retrospective` (optional) — reflect on what was learned.
+**Next skill:** `reflect` (optional / event-driven) — distill lessons and patterns from what was shipped.
 **Failure conditions:** Any stage fails unrecoverably — stop and report with exact stage, error, and log state.

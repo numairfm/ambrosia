@@ -1,6 +1,6 @@
 {
   "name": "ambrosia",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An opinionated software engineering operating system for AI coding agents. Enforces context isolation, evidence-based verification, and structured pipeline execution across LLM harnesses.",
   "skills": [
     "skills/using-ambrosia",
@@ -18,6 +18,6 @@
     "skills/trim",
     "skills/debt",
     "skills/deliver",
-    "skills/retrospective"
+    "skills/reflect"
   ]
 }

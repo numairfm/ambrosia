@@ -210,7 +210,7 @@ For rollback: `<timestamp> [<session-tag>] [deliver] rolled back to checkpoint <
 ## Output Contract
 
 **Produces:** Branch merged/pushed/parked/rolled-back. `.ambrosia/ambrosia.log.md` entry appended.
-**Next skill:** None — this is the terminal stage. Optionally run `retrospective` to capture learning from the session.
+**Next skill:** None — this is the terminal stage. Optionally run `reflect` (or auto-trigger if major pivots or debug cycles occurred) to capture lessons from the session.
 **Failure conditions:** Tests fail on the integration tree (stop until green). Rollback requires exact word confirmation.
 
 ---

@@ -30,7 +30,7 @@ An opinionated software engineering operating system for AI coding agents. Not a
 | `trim` | Tool | Audit & strip over-engineering. Modes: `trim` (diff), `trim full` (whole repo) |
 | `debt` | Tool | Harvest and track `// ponytail:` technical debt markers |
 | `context` | Tool | Compress session state and produce a clean resume prompt for a fresh session |
-| `retrospective` | Tool | Post-verify reflection — surface surprises, wrong assumptions, and reusable patterns |
+| `reflect` | Tool | Post-delivery reflection — distill lessons, reusable patterns, and technical debt |
 | `deliver` | Spine | Close out branch cleanly (merge, PR, park, or rollback) |
 | `ship` | Meta | Full pipeline in one shot: audit → plan → build → review → verify → deliver |
 | `handoff` | System | Concurrent subagent dispatch mechanism (model-invoked) |
@@ -81,7 +81,7 @@ Apply for: execution mode, model tier overrides, fix-loop escalation choices, re
 - Stating a new project goal automatically triggers `audit`.
 - If `.ambrosia/PARKED.md` exists, prompt to resume the parked session immediately.
 - If `.ambrosia/context.md` exists from a previous session, read it before doing anything else.
-- After `deliver` closes out a significant branch, consider running `retrospective` to capture learning before starting the next task.
+- After `deliver` closes out a significant branch, consider running `reflect` to capture learning before starting the next task.
 
 ---
 
