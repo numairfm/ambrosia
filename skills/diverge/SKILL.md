@@ -1,118 +1,76 @@
 ---
 name: diverge
-description: Parallel divergent ideation for open-ended design, naming, architecture, API surface, and fuzzy debugging. Runs isolated cognitive frames, scores, prunes traps, deepens top survivors. Use on "diverge", "ADHD mode", "look at different angles", "explore options", "brainstorm", "what are we missing", or any open-ended design/strategy question. Skip for syntax, lookups, bugs with known root cause, or closed phrasing ("quick", "standard", "canonical", "just").
+description: Event-driven capability of Ambrosia v2 implementing Udit Akhouri's ADHD architecture (Parallel Divergent Ideation for Coding Agents). Mitigates premature convergence by fanning out N isolated cognitive frames with zero shared context, running a separate Critic Pass for trap hunting, and deepening top survivors. Trigger on open-ended design, naming, API surface choices, or fuzzy debugging.
 ---
 
-# Diverge
+# Diverge (ADHD Engine)
 
-Explore alternative designs, naming, architectures, or debugging hypotheses before committing to one path.
+`Diverge` implements Udit Akhouri's **ADHD architecture** (*Parallel Divergent Ideation for Coding Agents*). Its job is to answer one question:
 
-**Two Tiers:**
-- **Lite-Diverge (Default/Inline):** Silently brainstorm 3 distinct options internally. Surface only the top recommended option with a 1-sentence trade-off summary.
-- **Full-Diverge (`diverge full`):** Execute a complete 5-frame divergent matrix across architectural, UX, and operational axes.
+> **"How do we break premature convergence and linear model anchoring by spawning isolated cognitive frames, hunting premature traps, and deepening top non-obvious survivors before committing to a plan?"**
 
----
-
-## Process (Full-Diverge)
-
-**Step 1 — Explicit invocation check.**
-
-If the user typed `diverge`, "ADHD mode", "use diverge", "look at different angles", "explore options", "brainstorm this", "what are we missing", or similar: **skip the rest of this section and go straight to mode selection.** The user opted in. Do not second-guess.
-
-**Step 2 — Self-judge (only if Step 1 did not match).**
-
-Ask three questions. If the answer to ANY is no, ABORT and answer directly.
-
-1. **Open-ended?** Would a senior engineer give multiple viable answers, or is there one canonical answer? If canonical, abort.
-2. **High-stakes?** Is the cost of the obvious answer being wrong actually high? Architecture decisions, public API surfaces, product naming, schema design = yes. Side project config tweak = no.
-3. **Open phrasing?** Did the user avoid words like "quick", "standard", "canonical", "textbook", "just", "one-line"? If any present, abort.
-
-If all three pass: proceed to mode selection.
-If any fails: answer directly. Optionally append: *"For wider exploration under parallel cognitive frames, say `diverge <your problem>`."*
-
-**Step 3 — Intent Detection & Mode Selection.**
-
-Analyze the user's prompt for **semantic intensity**:
-
-- **Full Mode (5 Frames Matrix):** Trigger automatically if the request implies deep, maximum, exhaustive, or intensive exploration. Look for intensity signals like *"to the max"*, *"intensely"*, *"don't miss anything"*, *"full"*, *"thoroughly"*, *"deep dive"*, *"every angle"*, *"all options"*, or high-stakes architectural/API decisions.
-- **Lite Mode (3 Frames Inline - Default Fallback):** Trigger for standard/casual design questions, quick brainstorm requests, or when auto-triggered by the self-judge gate without intense phrasing.
+`Diverge` treats premature convergence as an architectural problem, not a prompting one. Autoregressive Chain-of-Thought anchors on whatever it states first. `Diverge` solves this by fanning out $N$ parallel sub-processes under deliberately distorted **Cognitive Frames** with zero shared context, followed by a separate **Critic Pass** that scores ideas, hunts traps, and deepens top survivors.
 
 ---
 
-## Phase 1 — Diverge (no critic)
+## Operational Workflow
 
-Two strict phases. Mixing them kills idea quality — the critic strangles the generator.
+Execute `Diverge` through five sequential steps:
 
-**Pick frames from the table below.** Lite: pick 3. Full: pick 5. Bias toward engineering frames for code-shaped problems. Always include at least one wild frame.
+### 1. Self-Judge Gate & Tier Check
+Before fanning out, evaluate if the prompt warrants divergence:
+- **Gate Check:** Is the prompt open-ended, high-stakes, or asking *"give me a few ways to..."*? If NO (syntax lookup, closed bug fix with known root cause), abort `Diverge` and answer directly.
+- **Select Tier:**
+  - **Lite-Diverge (Default):** 3 cognitive frames. Fast, low context bloat.
+  - **Full-Diverge (`diverge full`):** 6 cognitive frames. Deep architectural ideation.
 
-For each frame, dispatch one **parallel** Agent/Task call. Each agent receives ONLY:
-- The problem
-- Any context the user provided
-- The frame's vantage prompt
-- This system instruction:
+### 2. Parallel Frame Fan-Out (Zero Shared Context)
+Spawn $N$ isolated reasoning sub-processes under distinct **Cognitive Frames**. Each frame views the problem through a distorted lens without seeing the other frames' outputs:
+- **`regulator`:** Unhandled failure modes, security boundaries, rate limits, input validation.
+- **`compiler`:** Hidden state mutations, circular coupling, unsafe type boundaries.
+- **`archaeologist`:** Buried assumptions, legacy technical debt, brittle dependencies.
+- **`hardware-scale`:** Memory leaks, performance bottlenecks, unneeded overhead.
+- **`oncall-engineer`:** 3 AM observability, fault isolation, graceful degradation, circuit breakers.
+- **`minimalist-refactorer`:** Zero-dependency stdlib solutions, YAGNI cuts, deleting code.
 
-> You are in DIVERGENT mode. You are a generator, not a critic.
-> Generate 6 short distinct ideas under this frame. Each idea is one phrase or one sentence. Do not evaluate. Do not rank. Do not hedge.
-> The first three obvious answers everyone would give are banned. Push past them into the awkward middle.
-> Output a JSON array only. No prose before or after.
-> `[{"text": "...", "rationale": "..."}, ...]`
+### 3. Critic Pass & Trap Hunting
+In a **separate critic pass** (isolated from generation), evaluate all raw frame outputs:
+- **Novelty & Fit Scoring:** Score generated ideas on novelty (1-10) and viability/fit (1-10).
+- **Trap Hunting:** Explicitly identify and flag **premature traps** (obvious, textbook, or flawed patterns that look attractive but fail in production) with 1-line reasons.
 
-**Critical invariant:** All agent calls MUST be issued in the same response turn. Do NOT serialize them. Do NOT pass one branch's output as context to another. Branches that see each other anchor each other — the whole method collapses.
+### 4. Cluster & Deepen Top Survivors
+- Cluster raw ideas by underlying angle (e.g., control surface, perceptual, redundancy, economic).
+- Select top-K non-obvious surviving ideas (high novelty + high viability).
+- **Deepen:** Expand top survivors into concrete architecture sketches, detailing trade-offs, risks, and locked file boundaries.
 
-**Protocol note:** This dispatch follows the same invariant as `handoff`. If called from within an active `build` or `verify` session, prefer routing through `handoff` rather than re-implementing dispatch inline — so any future protocol changes propagate automatically.
+### 5. Present & Route to Plan
+Present the ADHD summary:
+1. **Traps Flagged:** Identified pitfalls with 1-line reasons.
+2. **Top Non-Obvious Picks:** Top-K deepened survivors with architecture sketches.
+3. **Recommended Path:** 1-turn selection prompt (`"Reply 'go' to accept recommendation [Option X], or choose [Option Y/Z]"`).
 
-### Frame table
-
-| Frame | Vantage prompt | Best for |
-|---|---|---|
-| **Hardware engineer** | You think in latency, memory layout, and failure modes. Everything is a tradeoff between throughput and safety. | Performance, infra, systems |
-| **10-year-old** | You ask "why does this have to be so complicated?" You want the simplest thing that could possibly work. | Simplification, API design |
-| **Speedrunner** | You optimize for the fastest path to a working result. You skip everything optional. | Prototyping, MVP scope |
-| **Regulator** | You look for what goes wrong, what fails silently, what the spec doesn't cover. | Risk analysis, edge cases |
-| **Biology/evolution** | You ask what survives in real use and what gets selected out over time. | Long-term design, adoption |
-| **$0 budget** | You build with what already exists — stdlib, platform primitives, zero new deps. | Dependency reduction |
-| **Domain outsider** | You know nothing about this field's conventions and question every assumption. | Naming, UX, first-principles |
-| **Compiler** | You think in types, invariants, and what the machine actually does. | Type design, correctness |
-| **Anthropologist** | You study how people actually use tools vs how they're supposed to. | UX, developer experience |
-| **Archaeologist** | You ask what buried assumption is making this hard. | Fuzzy debugging, architecture |
-
----
-
-## Phase 2 — Focus (critic on)
-
-After all branches return:
-
-**1. Score.** Rate each idea on three axes 0-10:
-- **Novelty** (0.35 weight) — distance from the obvious default
-- **Viability** (0.40 weight) — could it actually ship?
-- **Fit** (0.25 weight) — does it address the stated problem?
-
-For any idea that looks attractive but is a trap (hidden cost, false economy, won't scale, premature abstraction): flag it with a one-line reason.
-
-**2. Cluster.** Group ideas into 3-6 clusters by underlying angle, not surface keywords. Label by angle, not topic.
-
-**3. Deepen the top 3.** Rank by weighted score, exclude traps, take top 3. For each, dispatch one Agent call:
-
-> You are in FOCUS mode. Take one promising idea and connect dots.
-> Sketch how it would actually work in 4-8 sentences. Name the load-bearing risk. Name the first concrete step a coder would take.
-> Then generate 3-5 sub-ideas that branch off (variations, combinations, things this unlocks).
-> Output JSON only.
-
-**4. Present.** Show the top 3 deepened ideas with scores, cluster labels, traps flagged. Keep it scannable — the user picks, not the model.
+End with:
+> **Next Stage:** `Plan` — proceed to generate implementation plan for selected architectural path.
 
 ---
 
-## Completion
+## Standing Rules & Invariants
 
-Append to `ambrosia.log.md`:
-```
-<timestamp> [<session-tag>] [diverge] <mode> — <N> frames, top idea: <one-line summary>
-```
+1. **Zero Shared Context During Divergence:** Frames MUST be generated in parallel isolation. Never allow Frame B to see Frame A's output during divergence to prevent anchoring.
+2. **Separate Critic Pass:** Scoring and trap hunting MUST happen in a separate pass after all frames have generated. Never mix critique into frame generation.
+3. **Zero Code Edits:** `Diverge` MUST NOT modify project source files. Implementation is executed downstream by workers via `Plan` and `Implement`.
+4. **Log State:** Log cognitive frames used, traps flagged, and selected path in `.ambrosia/logs/ambrosia.log.md`.
 
 ---
 
-## Output Contract
+## Output Contract & Handoff
 
-**Produces:** Top 3 deepened ideas with weighted scores, cluster labels, and flagged traps. `ambrosia.log.md` entry appended.
-**Next skill:** User picks from presented options — typically hands off to `plan`, `audit`, or `debug` depending on context.
-**Failure conditions:** Self-judge gate fails (answer directly without running frames). All frames produce the same idea (flag convergence, reduce frame count or reframe the problem). Agent dispatch unavailable (run frames sequentially inline, note degraded parallelism).
+Produce a structured ADHD report covering:
+
+1. **Gate Status & Tier:** `Lite-Diverge` (3 frames) or `Full-Diverge` (6 frames).
+2. **Traps Flagged:** List of identified premature traps with 1-line failure reasons.
+3. **Clustered Ideas & Deepened Picks:** Top non-obvious survivors with architecture sketches and risk profiles.
+4. **Recommendation & User Choice Prompt:** Stated recommendation with 1-turn selection prompt.
+
+End with:
+> **Next Stage:** `Plan` — proceed to generate implementation plan for selected architectural path.

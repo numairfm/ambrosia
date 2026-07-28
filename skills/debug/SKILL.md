@@ -1,132 +1,63 @@
 ---
 name: debug
-description: "Systematic root cause debugging. Four-phase process: reproduce, isolate, hypothesize, fix. Never proposes fixes without root cause. Dispatches handoff on unrelated bugs. Escalates to diverge on architectural failures. Use when something is broken, a test fails, or behavior is unexpected."
+description: Event-driven capability of Ambrosia v2. Systematically reproduces, isolates, and diagnoses the root cause of implementation or verification failures before attempting repairs. Trigger when tests fail, workers block, or "debug" is invoked.
 ---
 
 # Debug
 
-**Iron law:** Find the root cause before proposing any fix. Symptom fixes are failure.
+`Debug` is an event-driven capability of Ambrosia v2. Its job is to answer one question:
 
-## Pre-flight
+> **"How do we systematically reproduce, isolate, and diagnose the root cause of an error before attempting any fix, avoiding trial-and-error code edits?"**
 
-**0. Auto-Triage Check.** If `$ARGUMENTS` is empty, vague ("something's broken"), or routed automatically from `verify`:
-- Run the full test suite (`npm test` / `cargo test` / `pytest` / `go test ./...`)
-- Inspect recent changes: `git log --oneline -10` and `git diff HEAD~3..HEAD --stat`
-- Identify concrete failure candidates, present a 1-turn triage summary, and proceed directly to Phase 1 on the failing component. Zero manual mode switches required.
-
-**1. Triage incoming bugs.** If multiple bugs or failures are reported, classify them:
-- Same root cause → handle together
-- Related (one causes another) → handle sequentially, root first
-- **Unrelated (disjoint files, disjoint subsystems)** → invoke `handoff` to dispatch in parallel (relying on `handoff/SKILL.md`'s centralized parallel dispatch ping), then resume
-
-**2. Read AGENTS.md** for project-specific debugging context, test commands, known environment issues.
+`Debug` is invoked when `Implement` or `Verify` encounters a failure. It replaces speculative trial-and-error editing with a disciplined 4-phase diagnosis workflow. The orchestrator coordinates diagnosis and worker dispatch, never modifying code directly.
 
 ---
 
-## Phase 1 — Root Cause Investigation
+## Operational Workflow
 
-**BEFORE attempting any fix:**
+Execute `Debug` through four sequential phases:
 
-**1. Read error messages completely.**
-- Don't skip past errors or warnings
-- Read stack traces fully — note line numbers, file paths, error codes
-- They often contain the exact answer
+### Phase 1: Reproduce
+- Ingest error traces, stack traces, and failure logs from `Implement` or `Verify`.
+- Establish a minimal, deterministic reproduction command or test case.
+- Confirm the failure reproducibly triggers before attempting any analysis.
 
-**2. Reproduce consistently.**
-- Can you trigger it reliably? What are the exact steps?
-- If not reliably reproducible → gather more data, do not guess
+### Phase 2: Isolate
+- Trace execution flow upstream from the failure point.
+- Narrow the failure surface to the exact file, function, signature, or state boundary where actual behavior diverges from expected behavior.
+- Differentiate between logic bugs, type/interface mismatches, state corruption, or missing dependencies.
 
-**3. Check recent changes.**
-- `git log --oneline -20` and `git diff HEAD~5..HEAD` on relevant files
-- What changed that could cause this?
+### Phase 3: Diagnose (Root Cause)
+- Formulate a single, evidence-backed hypothesis for the exact root cause.
+- Reject superficial symptom patching (e.g., swallowing exceptions, adding dummy fallbacks, commenting out broken assertions).
+- Verify the hypothesis against log evidence before prescribing a repair.
 
-**4. Gather evidence in multi-component systems.**
-Before proposing fixes, add diagnostic instrumentation at each component boundary:
-- What data enters the component?
-- What data exits?
-- Where does the bad value first appear?
-
-Run once to gather evidence. Analyze. Then investigate the specific failing component.
-
-**5. Trace data flow.**
-- Where does the bad value originate?
-- What called this with the bad value?
-- Trace backward up the call stack until you find the source
-- Fix at the source, not at the symptom
+### Phase 4: Prescribe Fix & Route
+- Write a precise, minimal repair prescription defining the exact target file and logic change needed.
+- **Single/Minor Bug:** Route diagnosis back to `Implement` for worker TDD repair.
+- **Recurring Failure (3+ Failed Attempts):** Escalate to `Diverge` for architectural re-evaluation if root cause indicates a fundamental design flaw.
 
 ---
 
-## Phase 2 — Pattern Analysis
+## Standing Rules & Invariants
 
-**1. Find working examples.** Locate similar working code in the same codebase.
-
-**2. Compare against references.** If implementing a pattern, read the reference implementation completely — not a skim.
-
-**3. Identify differences.** List every difference between working and broken, however small.
-
-**4. Understand dependencies.** What environment, config, or state does this assume?
+1. **No Trial-and-Error Fixes:** Never attempt code modifications without a proven root-cause hypothesis.
+2. **Zero Code Edits:** `Debug` MUST NOT modify project source files directly. Repairs are executed by dispatched workers via `Implement`.
+3. **No Symptom Masking:** Swallowing exceptions, adding dummy returns, or deleting failing unit tests is strictly prohibited.
+4. **Escalation Gate:** If a bug resists 3 repair attempts, halt execution and escalate to `Diverge` or prompt the user.
+5. **Log State:** Log diagnosis details and root cause summary in `.ambrosia/logs/ambrosia.log.md`.
 
 ---
 
-## Phase 3 — Hypothesis and Testing
+## Output Contract & Handoff
 
-**1. Form a single hypothesis.** State clearly: "I think X is the root cause because Y." Write it down.
+Produce a clear, evidence-backed diagnostic report covering:
 
-**2. Test minimally.** Make the smallest possible change to test the hypothesis. One variable at a time.
+1. **Reproduction Case:** The exact command or test demonstrating the failure.
+2. **Isolated Location:** The exact file, function, and line range of the root cause.
+3. **Root Cause Analysis:** Explanation of why the contract broke (backed by log evidence).
+4. **Prescribed Repair:** Minimal, targeted fix instructions for worker implementation.
 
-**3. Verify before continuing.**
-- Worked → Phase 4
-- Didn't work → form NEW hypothesis. Do NOT add more fixes on top.
-
-**4. When uncertain:** say "I don't understand X" and research before hypothesizing.
-
----
-
-## Phase 4 — Implementation
-
-**1. Write a failing test first.** Simplest possible reproduction. Automated if possible.
-
-**2. Implement single fix.** Address the root cause only. No "while I'm here" improvements.
-
-**3. Verify the fix.** Test passes. No other tests broken. Issue actually resolved.
-
-**4. If fix doesn't work:**
-- Count how many fixes have been attempted
-- Fewer than 3: return to Phase 1 with new information
-- **3 or more: STOP — question the architecture**
-
-**5. If 3+ fixes failed:** This is an architectural problem, not a symptom. Invoke `diverge` (lite mode) on the question "what is wrong with the architecture here?" before attempting more fixes. Discuss findings with the user before proceeding.
-
----
-
-## Red flags — stop and return to Phase 1
-
-- "Quick fix for now, investigate later"
-- "Just try changing X and see"
-- Adding multiple changes at once
-- Skipping the test
-- "I don't fully understand but this might work"
-- Proposing solutions before tracing data flow
-- "One more fix attempt" when already tried 2+
-- Each fix reveals a new problem in a different place
-
----
-
-## Completion
-
-After root cause found and fix verified:
-
-Append to `ambrosia.log.md`:
-```
-<timestamp> [<session-tag>] [debug] root cause: <one-line description> — fixed in: <file:line> — test: <test name>
-```
-
-Then recommend running `verify` to confirm no regressions.
-
----
-
-## Output Contract
-
-**Produces:** Root cause documented in `ambrosia.log.md` with file:line location and confirming test name. Fix committed.
-**Next skill:** `verify` — re-run the full test suite to confirm no regressions introduced by the fix.
-**Failure conditions:** 3+ fix attempts failed (stop — escalate to `diverge` for architectural re-evaluation). Fix works locally but breaks unrelated tests (do not merge, investigate regression first). Root cause not found after full data-flow trace (document uncertainty, ask user before guessing).
+End with:
+- Standard Repair: > **Route to:** `Implement` — dispatch worker subagent to execute prescribed repair under TDD loop.
+- Structural Failure: > **Route to:** `Diverge` — architectural redesign required after repeated fix failures.

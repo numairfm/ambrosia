@@ -1,176 +1,68 @@
 ---
 name: plan
-description: Decompose an audited task into a concrete, file-mapped, parallel-safety-tagged implementation plan. Runs research in a fresh subagent. Writes plan to .ambrosia/plans/. Use after audit, or directly when prompt is already complete. Trigger on "plan this", "create a plan", "break this down", or after audit completes.
+description: Second stage of the Ambrosia v2 Core Lifecycle. Decomposes the analyzed objective into a minimal, file-mapped implementation strategy. Applies aggressive YAGNI, detects phase splits, and produces a structured plan file in .ambrosia/plans/. Trigger after Analyze completes or when "plan" is invoked.
 ---
 
 # Plan
 
-Decompose the task into a concrete implementation plan. Research happens in a fresh subagent. The result is a file-mapped, parallel-safety-tagged plan that `build` can execute without ambiguity.
+`Plan` is the second stage of the Ambrosia v2 Core Lifecycle. Its job is to answer one question:
 
-**Announce:** "Using the plan skill to create the implementation plan."
+> **"What is the smallest coherent implementation strategy that achieves the defined success criteria?"**
 
----
-
-## Pre-flight
-
-**1. Prerequisite check.** Read `ambrosia.log.md`. If no `[audit]` or `[orient]` entry exists for this task AND `force` (or `--force`) was not passed:
-```
-No audit found for this task. Run `audit` first to gap-check the prompt, or say `plan force` to plan directly.
-```
-
-**2. Auto-init check.** If `.ambrosia/` does not exist, create it now:
-  ```bash
-  mkdir -p .ambrosia/{plans,specs} && touch .ambrosia/ambrosia.log.md
-  ```
-  Then continue.
-
-**3. Read AGENTS.md.** If `AGENTS.md` exists, read it fully. Project constraints override Ambrosia defaults.
-
-**4. Scope check.** If the task clearly covers multiple independent subsystems (e.g., "build a platform with auth, payments, and analytics"), flag this immediately:
-```
-This task covers multiple independent subsystems. Decompose into sub-projects first?
-I'll plan the first one. Suggest: [list subsystems in build order].
-```
+`Plan` transforms the `Analyze` brief into a concrete, ordered set of tasks for `Implement`. It locks file boundaries, enforces YAGNI constraints, and structures dependencies. It never writes code or modifies project source files.
 
 ---
 
-## Step 1 — Research (Inline or Subagent)
+## Operational Workflow
 
-**Inline Research (Fast-Path):**
-If the task touches ≤ 3 files and the relevant code context is already loaded in the session, perform research **directly inline** in the coordinator context. Skip spawning a subagent.
+Execute `Plan` through five sequential steps:
 
-**Subagent Research (Broad/Complex):**
-If the task touches > 3 files or requires deep exploration of unread directories, dispatch one research subagent with a clean context window. Have it write findings to `.ambrosia/specs/<YYYY-MM-DD>-<slug>-research.md`.
+### 1. Ingest Brief & Preserve Success Criteria
+- Read the `Analyze` brief, stated defaults, and complexity tier.
+- Carry forward the exact **Definition of Success** established by `Analyze` — this is the non-negotiable target that downstream stages (`Verify`, `Finish`) will validate.
 
-Never have research modify source files.
+### 2. Lock File Boundaries & Apply Upfront YAGNI
+- Map the exact files that must be created, modified, or tested.
+- Lock file structure before writing task steps.
+- Apply YAGNI aggressively: remove unrequested abstractions, extra helpers, or speculative features.
+- If a simplification is deliberately made to keep the plan lean, tag it inline as a YAGNI constraint: `// ponytail: <what was simplified> | ceiling: <limit> | upgrade: <trigger>`.
 
----
+### 3. Decompose into Minimal Coherent Tasks
+- Break the work into small, focused tasks with clear file responsibilities and implementation order.
+- Specify exact interfaces for each task (what it consumes from prior tasks, what it produces for later tasks).
+- Structure tasks so worker context switching is minimized (group changes by logical responsibility, not arbitrary layers).
+- Define TDD verification steps for each task (failing test -> minimal implementation -> pass assertion).
 
-## Step 1b — Architecture sketch
+### 4. Detect Phase Splits (> 10 Tasks Limit)
+- Count total tasks required.
+- **Hard Limit:** If decomposition requires > 10 tasks, stop immediately. Split into **Phase 1** and **Phase 2**.
+- Plan only **Phase 1** to maintain context hygiene. State: *"Plan split into phases. Phase 1 covers [X]. Phase 2 will cover [Y]."*
 
-Before decomposing into files and tasks, write a 3-5 sentence prose sketch of the intended architecture — major components, how they connect, the load-bearing design decision. Post this as a visible ping.
-
-Determine the audit score:
-- If the score is in the current session context, use it directly.
-- Otherwise, read it from the most recent `[audit]` log entry in `ambrosia.log.md` — it is recorded as `(score: <N>/10)`.
-
-- Score ≥ 6 → continue immediately after posting the sketch
-- Score < 6 → gate: wait for user to confirm the shape before proceeding to Step 2
-
----
-
-## Step 2 — File structure
-
-Before defining tasks, map which files will be created or modified and what each is responsible for:
-
-- Each file: one clear responsibility
-- Files that change together live together — split by responsibility, not layer
-- In existing codebases: follow established patterns; if a file is oversized, splitting it is reasonable if you're modifying it anyway
-
-This structure informs task decomposition. Lock it before writing tasks.
-
-**Hard limit:** if decomposition requires more than 10 tasks, stop. Split into Phase 1 / Phase 2. Plan only Phase 1. Ask: "This is large enough to split into phases. Phase 1 will cover [X]. Continue?"
+### 5. Validate & Save Plan
+- Perform self-review: Confirm every requirement maps to a task, signatures align across tasks, and zero placeholders (`TBD`, `TODO`, `similar to Task N`) exist.
+- Save plan file to `.ambrosia/plans/<YYYY-MM-DD>-<slug>.md`.
 
 ---
 
-## Step 3 — Write the plan
+## Standing Rules & Invariants
 
-Save to `.ambrosia/plans/<YYYY-MM-DD>-<slug>.md`.
-
-**Required header:**
-
-```markdown
-# <Feature Name> — Implementation Plan
-
-> **Ambrosia:** Use `build` to execute this plan task-by-task.
-
-**Goal:** [One sentence]
-**Branch:** ambrosia/<slug>
-**Test command:** [from AGENTS.md or detected]
-**Build command:** [from AGENTS.md or detected]
-
-## Global Constraints
-[Project-wide requirements from AGENTS.md — exact values, one line each]
-
----
-```
-
-**Task format:**
-
-```markdown
-### Task N: <Component Name>
-**Parallel-safety:** [parallel-safe | sequential: depends on Task N]
-**Files:**
-- Create: `exact/path/to/file`
-- Modify: `exact/path/to/existing:L123-145`
-- Test: `tests/exact/path/to/test`
-
-**Interfaces:**
-- Consumes: [exact signatures from prior tasks]
-- Produces: [exact function names, types, parameters — what later tasks rely on]
-
-- [ ] Step 1: Write the failing test
-  ```<lang>
-  // exact test code
-  ```
-- [ ] Step 2: Run it — expect FAIL with "<specific error>"
-- [ ] Step 3: Write minimal implementation
-  ```<lang>
-  // exact implementation
-  ```
-- [ ] Step 4: Run — expect PASS
-- [ ] Step 5: Commit: `ambrosia(task-N): <description>`
-```
-
-**No placeholders.** Every step contains the actual content. "TBD", "implement later", "add validation" are plan failures.
+1. **Orchestrator Executed:** Runs in the main orchestrator context. Never edits project source files.
+2. **Zero Placeholders:** Every task must contain exact file paths, interfaces, and step assertions. "TBD" or "implement later" are plan failures.
+3. **Turn-Based Approval Gate:**
+   - Plans with ≤ 5 tasks: Post plan summary, state `"Proceeding — say 'stop' to cancel"`, end turn.
+   - Plans with > 5 tasks: Post plan summary, state `"Review plan. Reply 'go' to build"`, wait for user approval.
+4. **Log State:** Log stage completion in `.ambrosia/logs/ambrosia.log.md`.
 
 ---
 
-## Step 4 — Plan self-review
+## Output Contract & Handoff
 
-After writing the complete plan:
-1. **Coverage:** can every requirement be traced to a task?
-2. **Placeholder scan:** any TBD, TODO, "similar to Task N"?
-3. **Type consistency:** do signatures defined in early tasks match how later tasks use them?
-4. **Parallel-safety correctness:** do all `parallel-safe` tasks truly have disjoint file sets?
+Produce a clear, structured summary covering:
 
-Fix issues inline. No need to re-review.
+1. **Plan Metadata:** Goal, branch, test command, build command.
+2. **Task Overview:** Task count, dependency order, files touched, and YAGNI constraints.
+3. **Definition of Success:** Carried directly from `Analyze`.
+4. **Saved Plan Location:** `.ambrosia/plans/<YYYY-MM-DD>-<slug>.md`.
 
----
-
-## Step 5 — Approval
-
-**For all plans:** Post the full plan summary as a visible ping before proceeding:
-
-```
-Plan summary:
-  Tasks: <N> (<M> parallel-safe, <K> sequential)
-  Files touched: <list>
-  Estimated subagent calls: ~<N + parallel-safe batches>
-  Branch: ambrosia/<slug>
-
-Assumed defaults (from audit):
-  - <default carried from audit step>
-  (none — all constraints were explicit)
-```
-
-**For plans with ≤ 5 tasks:** After posting the summary, say "Proceeding — say 'stop' to cancel." Then **end the response**. Do not continue in the same reply. Wait for the next user message before invoking `build`.
-
-**For plans with > 5 tasks:** After posting the summary, say "Review this plan. Type `go` to build, or give feedback." Wait for explicit approval before proceeding.
-
----
-
-## Completion
-
-Append to `ambrosia.log.md`:
-```
-<timestamp> [<session-tag>] [plan] complete — <N> tasks, <M> parallel-safe — .ambrosia/plans/<filename>
-```
-
----
-
-## Output Contract
-
-**Produces:** `.ambrosia/plans/<YYYY-MM-DD>-<slug>.md` with file-mapped, parallel-safety-tagged TDD tasks. `ambrosia.log.md` entry appended.
-**Next skill:** `build` — execute the plan task-by-task with isolated worker subagents.
-**Failure conditions:** Plan requires > 10 tasks (split into phases first). Placeholder content detected in self-review (fix inline before handing off). Research subagent returns empty output (treat as BLOCKED).
+End with:
+> **Next Stage:** `Implement` — dispatch worker subagents to execute tasks via TDD loops.

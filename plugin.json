@@ -1,23 +1,17 @@
 {
   "name": "ambrosia",
-  "version": "0.2.1",
-  "description": "An opinionated software engineering operating system for AI coding agents. Enforces context isolation, evidence-based verification, and structured pipeline execution across LLM harnesses.",
+  "version": "2.0.0",
+  "description": "An adaptive software engineering orchestration framework for AI coding agents.",
+  "author": "Antigravity Team",
   "skills": [
-    "skills/using-ambrosia",
-    "skills/orient",
-    "skills/audit",
-    "skills/plan",
-    "skills/build",
-    "skills/review",
-    "skills/verify",
-    "skills/debug",
-    "skills/diverge",
-    "skills/handoff",
-    "skills/ship",
-    "skills/context",
-    "skills/trim",
-    "skills/debt",
-    "skills/deliver",
-    "skills/reflect"
+    "analyze",
+    "plan",
+    "implement",
+    "verify",
+    "finish",
+    "checkpoint",
+    "review",
+    "debug",
+    "diverge"
   ]
 }

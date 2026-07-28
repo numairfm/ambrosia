@@ -1,112 +1,63 @@
 ---
 name: review
-description: "First-class pipeline stage. Independent diff review after build, before verify. Checks spec compliance, correctness, security, performance, and over-engineering. Also usable standalone at any time — before a PR, after a big refactor, or when you want a second opinion on any diff."
+description: Event-driven capability of Ambrosia v2. Performs an actionable diff review across spec compliance, security, and runtime correctness. Trigger when requested during Implement, for Medium/Large tasks, or when "review" is invoked.
 ---
 
 # Review
 
-Get a rigorous code review on any diff — not just "does this look right" but spec compliance, security, correctness, and a concrete list of findings you can act on.
+`Review` is an event-driven capability of Ambrosia v2. Its job is to answer one question:
 
-**Announce:** "Using the review skill."
+> **"Does the implementation comply with specification requirements, security invariants, performance standards, and runtime correctness without introducing regressions?"**
 
----
-
-## Pre-flight
-
-**What to review?** If not specified, default to the current branch diff: `git diff main...HEAD`
-
-Options (natural language matching from `$ARGUMENTS`):
-- Target: branch diff (default), staged changes (if mentioned), specific file (`review path/to/file`), or commit range (`review main..HEAD`)
-- Focus: any specific attention area mentioned (e.g. "focus on auth", "check security", "performance") is passed directly to the reviewer subagent contract.
-
-**Read AGENTS.md** for project constraints, patterns to follow, things to avoid. These are the reviewer's attention lens.
+`Review` evaluates code diffs against planned specifications before or during verification. It focuses strictly on actionable functional flaws, security risks, and runtime edge cases, deferring formatting and style to automated tools. The orchestrator conducts the review; workers execute code fixes.
 
 ---
 
-## Step 1 — Build the review package
+## Operational Workflow
 
-```bash
-# Default: full branch diff
-git log --oneline main..HEAD
-git diff --stat main...HEAD
-git diff -U10 main...HEAD
-```
+Execute `Review` through five sequential steps:
 
-Write the output to `.ambrosia/review-<timestamp>.diff`. This file is what the reviewer reads — it never enters the coordinator's context.
+### 1. Ingest Diffs & Scope
+- Ingest the git diff, modified file list, and target specification from `Plan` and `Analyze`.
+- Limit review strictly to modified lines and immediate interface boundaries.
 
----
+### 2. Audit Vector 1: Spec Compliance
+- Verify that every code addition directly traces to an approved plan task.
+- Check for unapproved scope expansion, missing requirements, or partial interface implementations.
 
-## Step 2 — Dispatch reviewer subagent
+### 3. Audit Vector 2: Security & Safety
+- Check for security vulnerabilities: injection risks, credential exposure, unsafe file/system calls, unvalidated user input, and insecure defaults.
+- Confirm secret management compliance (zero hardcoded keys or tokens).
 
-Give the reviewer:
-- The diff file path
-- AGENTS.md constraints verbatim (the exact values and patterns the project requires)
-- The specific review goal or focus area from `$ARGUMENTS` (if any — "focus on auth logic", "security audit", "performance", etc.)
-- This review contract:
+### 4. Audit Vector 3: Runtime Correctness
+- Check for runtime edge cases: unhandled exceptions, race conditions, resource leaks, null/undefined dereferences, and logic boundaries.
+- Inspect physical/UI/interaction logic for behavioral correctness (preventing silent logic bugs that pass static compilation).
 
-**Review contract the subagent follows:**
-1. Read the diff completely before forming any opinion
-2. Check each change for: correctness, spec compliance, security, performance, maintainability
-3. Rate each finding: **Critical** (blocks merge), **Important** (should fix), **Minor** (worth noting)
-4. For each finding: file, line, severity, what's wrong, what to do instead
-5. End with overall verdict: APPROVE / REQUEST_CHANGES / NEEDS_DISCUSSION
-
-**Do not pre-judge findings.** Never tell the reviewer to ignore something or not flag it. If you think something is a false positive, let the reviewer raise it — you adjudicate afterward.
+### 5. Categorize Findings & Route
+Categorize all findings into explicit severity tiers:
+- **`CRITICAL` (Blocking):** Security vulnerability, data corruption, or severe runtime crash. Route back to `Implement` for immediate worker repair.
+- **`MAJOR` (Actionable):** Spec deviation or unhandled error state. Route to `Implement` for worker repair.
+- **`MINOR` (Non-blocking):** Minor leanness or optimization opportunity. Tag inline as `// ponytail:` debt candidate or pass cleanly.
 
 ---
 
-## Step 3 — Handle findings
+## Standing Rules & Invariants
 
-**No findings / APPROVE:**
-```
-Review: APPROVE
-No issues found. Clean diff.
-```
-
-**Findings present:**
-
-List all findings:
-```
-Review: REQUEST_CHANGES
-
-Critical:
-  L42 auth/middleware.js — JWT secret hardcoded. Use env var.
-
-Important:
-  L91 api/users.js — N+1 query in user listing. Add eager load.
-
-Minor:
-  L7 utils/format.js — unused import. Remove.
-```
-
-For **Critical/Important findings**: ask "Fix these now? (y/n)"
-- If yes: dispatch fix subagent with the complete findings list. One subagent, all findings together. Then run a scoped re-review on the fix diff.
-- If no: save findings to `.ambrosia/review-<timestamp>-findings.md` for later.
-
-For **Minor findings**: log them, don't block.
+1. **No Style Nitpicking:** Do not block reviews on code formatting, variable naming preferences, or cosmetic style. Defer to automated linters.
+2. **Zero Code Edits:** `Review` MUST NOT modify project source files. Fixes are executed by dispatched workers via `Implement`.
+3. **Actionable Findings Only:** Every `CRITICAL` or `MAJOR` finding MUST specify the exact file, line, and concrete defect.
+4. **Log State:** Log review outcome and finding counts in `.ambrosia/logs/ambrosia.log.md`.
 
 ---
 
-## Step 4 — Re-review (if fixes were made)
+## Output Contract & Handoff
 
-Dispatch a scoped re-reviewer on the fix diff only:
-- Confirm each Critical/Important finding: ADDRESSED or NOT ADDRESSED
-- Flag any new breakage introduced by the fix
-- Do not re-raise findings from the original diff on unchanged code
+Produce a structured review report covering:
 
----
+1. **Diff Scope:** Files inspected and line count.
+2. **Actionable Findings:** Categorized list of `CRITICAL`, `MAJOR`, and `MINOR` items with exact file:line references and recommended fixes.
+3. **Review Decision:** `APPROVED` (Pass to `Verify`) OR `REJECTED` (Route to `Implement` with fix list).
 
-## Completion
-
-Append to `ambrosia.log.md`:
-```
-<timestamp> [<session-tag>] [review] <verdict> — <N> critical, <M> important, <K> minor — <commit range>
-```
-
----
-
-## Output Contract
-
-**Produces:** Structured findings list with severity ratings (Critical / Important / Minor). Optional `.ambrosia/review-<timestamp>-findings.md` if fixes deferred. `ambrosia.log.md` entry appended.
-**Next skill:** `verify` — run the test suite and confirm plan compliance after review is clean.
-**Failure conditions:** Diff is empty (report and stop). Reviewer subagent returns empty output (treat as BLOCKED). Critical findings unresolved — do not proceed to verify until addressed or explicitly skipped.
+End with:
+- On Approval: > **Route to:** `Verify` — proceed to empirical test verification and final requirement gating.
+- On Rejection: > **Route to:** `Implement` — dispatch worker subagents to execute required fixes under TDD loop.

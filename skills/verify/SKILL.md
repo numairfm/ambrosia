@@ -1,147 +1,64 @@
 ---
 name: verify
-description: Confirm work is actually done — evidence-based, plan-checked. Runs the full test suite, checks output against the plan line by line, stamps a clean checkpoint. Routes failures through debug (which decides if handoff is appropriate). Use after review, before trim or deliver.
+description: Fourth stage of the Ambrosia v2 Core Lifecycle. Acts as the empirical gatekeeper, confirming implementation correctness against the original Definition of Success using concrete execution evidence. Trigger after Implement completes or when "verify" is invoked.
 ---
 
 # Verify
 
-**Iron law:** Evidence before claims, always.
+`Verify` is the empirical gatekeeper of Ambrosia v2. Its job is to answer one question:
 
-```
-NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
-```
+> **"Does the implementation satisfy the original Definition of Success with concrete evidence, zero regressions, and full boundary adherence?"**
 
-If you haven't run the verification command in this message, you cannot claim it passes.
+`Verify` inspects implementation outputs against the target requirements established in `Analyze` and `Plan`. It demands empirical runtime evidence before allowing work to complete. It never modifies source files or accepts unverified verbal assertions.
 
 ---
 
-## Pre-flight
+## Operational Workflow
 
-**1. Prerequisite check.** Read `ambrosia.log.md`. If no `[build]` entry exists AND `force` (or `--force`) was not passed:
-```
-No build found. Run `build` first, or say `verify force` to verify against existing code.
-```
+Execute `Verify` through five sequential steps:
 
-**2. Read the plan.** Load the plan file from `.ambrosia/plans/`. This is the ground truth for what was supposed to be built.
+### 1. Ingest Definition of Success & Plan Criteria
+- Retrieve the original **Definition of Success** carried forward from `Analyze` and `Plan`.
+- Load the file modification boundaries, test commands, and interface contracts specified in the plan.
 
-**3. Read AGENTS.md.** Confirms test command and build command.
+### 2. Execute Fresh Empirical Verification
+- Run the full project test suite and build verification commands fresh.
+- Do NOT rely on prior worker assertions — verification MUST execute fresh commands in the current turn.
+- Collect explicit command output logs (test pass counts, build exit codes, runtime assertions).
 
----
+### 3. Trace Requirements & Check Boundaries
+- Perform file:line requirement tracing: map every item in the **Definition of Success** to specific passing tests or verified code locations.
+- Verify boundary adherence: confirm file changes strictly matched locked plan paths without unapproved side effects or regressions in adjacent files.
 
-## Step 1 — Run the full test suite
+### 4. Evaluate Review Findings (If Applicable)
+- If `Review` was run during or after `Implement`, verify that all critical review findings (spec compliance, security, runtime correctness) have been addressed and validated.
 
-Run the project's complete test suite (from AGENTS.md or auto-detected: `npm test`, `cargo test`, `pytest`, `go test ./...`, etc.).
-
-**If tests fail:**
-```
-Tests failing: <N> failures
-
-[show exact failures with file:line]
-
-Do NOT claim anything is complete until failures are resolved.
-```
-
-Classify failures:
-- **Related failures** (same root cause, same subsystem) → handle together via `debug`
-- **Independent failures** (different subsystems, disjoint files) → invoke `debug` for each; `debug`'s own pre-flight determines whether those failures are `handoff`-eligible for parallel dispatch (relying on `handoff/SKILL.md`'s centralized parallel dispatch ping)
-
-**If tests pass:** continue to Step 2.
+### 5. Gate & Route Downstream
+- **100% Verification Pass:** Gate transition to `Finish`.
+- **Verification Failure (Bugs/Errors):** Route directly to `Debug` with full failure log evidence for 4-phase root cause isolation.
+- **Architectural Failure (Design Flaw):** Route to `Diverge` if verification exposes fundamental architectural flaws requiring redesign.
 
 ---
 
-## Step 2 — Reality check
+## Standing Rules & Invariants
 
-Run the build command (if applicable):
-```bash
-<build command from AGENTS.md>
-```
-
-Check for: exit 0, no compilation errors, no type errors.
-
-If the build fails but tests pass: still a failure. Report both.
+1. **Iron Law of Verification:** Never claim completion without fresh, empirical evidence (command output/logs) in the current message.
+2. **Zero File Modifications:** `Verify` MUST NOT create, edit, or delete project source files.
+3. **No Unverified Verbal Assertions:** "Tests pass" without output logs is a verification failure.
+4. **Strict Boundary Checking:** Any unapproved file edits outside plan boundaries fail verification.
+5. **Log State:** Append verification status and evidence summary to `.ambrosia/logs/ambrosia.log.md`.
 
 ---
 
-## Step 3 — Plan compliance check
+## Output Contract & Handoff
 
-Read the plan. For each requirement, confirm it exists in the built code at a specific file and line location:
+Produce a clear, evidence-backed summary covering:
 
-```
-Plan compliance:
-  [PASS] Task 1: <requirement> — verified at <file:line>
-  [PASS] Task 2: <requirement> — verified at <file:line>
-  [FAIL] Task 3: <requirement> — NOT FOUND
-```
+1. **Empirical Evidence Summary:** Command execution outputs, test pass/fail counts, build status.
+2. **Requirement Traceability:** Map of original Definition of Success items to verified code/test locations.
+3. **Boundary Verification:** Confirmation of zero unapproved file edits or regressions.
+4. **Gate Result:** `PASSED` (Proceed to `Finish`) OR `FAILED` (Route to `Debug`/`Diverge`).
 
-A requirement is verified only when you can point to the file and line that implements it. "Tests pass, phase complete" is NOT verification.
-
----
-
-## Step 4 — Stamp clean checkpoint
-
-If and only if:
-- All tests pass (exit 0, zero failures)
-- Build succeeds
-- Every plan requirement verified at a specific file:line
-
-Append to `ambrosia.log.md`:
-```
-<timestamp> [<session-tag>] [verify] clean — checkpoint: <commit-hash> — <N>/<N> requirements verified
-```
-
-
-
-This commit hash is the rollback target if anything goes wrong in later steps.
-
----
-
-## Step 5 — Report
-
-**Clean:**
-```
-Verify passed.
-  Tests: <N>/<N> passing
-  Build: clean
-  Plan: <N>/<N> requirements verified
-  Checkpoint: <short-hash>
-
-Ready for `trim` and `deliver`.
-```
-
-**Not clean:**
-```
-Verify failed.
-  Tests: <N> failing
-  [list exact failures with file:line and stack trace summary]
-  Plan gaps: [list missing requirements]
-
-Automatically hand off exact failure context to `debug` for root cause investigation.
-```
-
----
-
-## Common failures
-
-| Claim | Requires | Not sufficient |
-|---|---|---|
-| Tests pass | Test command output: 0 failures | Previous run, "should pass" |
-| Build succeeds | Build command: exit 0 | Linter passing |
-| Bug fixed | Original test: passes | Code changed, assumed fixed |
-| Requirements met | Line-by-line plan check | Tests passing |
-| Agent completed | VCS diff shows changes | Agent reports "success" |
-
-## Red flags — STOP
-
-- Using "should", "probably", "seems to"
-- Expressing satisfaction before running verification
-- About to move forward without evidence
-- Trusting agent success reports without independent check
-- Partial verification ("I checked the main path")
-
----
-
-## Output Contract
-
-**Produces:** `[verify] clean — checkpoint: <hash>` entry in `ambrosia.log.md`. All requirements verified at specific `file:line`. Rollback hash recorded.
-**Next skill:** `deliver` — present integration options once verify is clean. Optionally run `trim` first.
-**Failure conditions:** Any test fails (route to `debug`, do not proceed). Any plan requirement unverified (mark as FAIL, do not claim complete). Build command fails (report both test and build status).
+End with:
+- On Pass: > **Next Stage:** `Finish` — surface ponytail debt ledger, perform sensitive-data scan, present git integration options, and capture lessons.
+- On Fail: > **Route to:** `Debug` — perform 4-phase root cause diagnosis on verification failures.
