@@ -1,0 +1,15 @@
+{
+  "name": "ambrosia",
+  "version": "2.0.0",
+  "description": "Adaptive orchestration framework for AI software engineering",
+  "main": "plugin.json",
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "ambrosia",
+    "orchestration",
+    "ai"
+  ],
+  "author": "numairfm",
+  "license": "MIT"
+}
