@@ -26,12 +26,11 @@ Execute `Implement` through five sequential steps:
 - Dispatch isolated worker subagents (`dispatch_worker`) for each planned task.
 - Provide the worker with clean context: task objectives, locked file paths, consumes/produces interface contracts, and TDD requirements.
 
-### 3. Enforce Test-Driven Development (TDD)
-Workers execute each task in three disciplined phases:
-- **RED:** Write or locate the failing test assertion representing the task requirement. Run test to confirm failure.
-- **GREEN:** Write the minimal implementation code necessary to pass the test. No extra features.
-- **REFACTOR:** Clean up implementation while keeping tests green. Tag intentional simplifications inline using:
-  `// ponytail: <what was simplified> | ceiling: <limit> | upgrade: <trigger>`
+### 3. Enforce TDD & Adaptive Verification Protocol
+Workers execute each task using an adaptive verification loop:
+- **Test Suite Protocol:** If an automated test suite exists, enforce strict RED (failing test) -> GREEN (pass test with minimal code) -> REFACTOR loops.
+- **No-Test/Non-Code Fallback:** If no test suite exists or for non-code tasks (CSS, HTML, docs, config), fall back to empirical build assertions, linters, exit codes, or terminal execution logs.
+- **REFACTOR Phase:** Clean implementation while keeping pass criteria green. Tag intentional simplifications inline using: `<comment_prefix> ponytail: <what was simplified> | ceiling: <limit> | upgrade: <trigger>` (e.g. `#` Python/Bash/YAML, `--` SQL, `//` JS/TS/Go/Rust, `<!-- -->` HTML).
 
 ### 4. Process Worker Reports & Handle Blockers
 - Validate worker output upon task completion.
@@ -48,7 +47,7 @@ Workers execute each task in three disciplined phases:
 
 1. **Strict Worker Dispatch:** The orchestrator NEVER edits project source files. Every source file edit MUST be performed by a dispatched worker subagent.
 2. **Zero Scope Creep:** Execute only the approved plan. Do not alter architecture, add speculative helpers, or refactor unmentioned files.
-3. **Ponytail YAGNI Tags:** Tag all deliberate shortcuts inline at point of implementation.
+3. **Ponytail YAGNI Tags:** Tag all deliberate shortcuts inline using language-native comment prefixes (`<comment_prefix> ponytail:`).
 4. **BLOCKED Escalation:** Never silently improvise around broken dependencies or unexpected errors. Stop, report, and escalate to the orchestrator.
 5. **Log State:** Append task progress and stage completion to `.ambrosia/logs/ambrosia.log.md`.
 
@@ -59,7 +58,7 @@ Workers execute each task in three disciplined phases:
 Produce a clear, scannable summary covering:
 
 1. **Tasks Completed:** List of executed tasks and modified files.
-2. **Implementation Evidence:** Test pass reports and worker completion statuses.
+2. **Implementation Evidence:** Test pass reports, build logs, or worker completion statuses.
 3. **Surfaced Ponytail Tags:** Summary of any inline YAGNI tags created during execution.
 4. **Target Success Criteria:** Re-affirm the target criteria carried from `Analyze`/`Plan`.
 

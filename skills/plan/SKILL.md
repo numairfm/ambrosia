@@ -25,7 +25,7 @@ Execute `Plan` through five sequential steps:
 - Map the exact files that must be created, modified, or tested.
 - Lock file structure before writing task steps.
 - Apply YAGNI aggressively: remove unrequested abstractions, extra helpers, or speculative features.
-- If a simplification is deliberately made to keep the plan lean, tag it inline as a YAGNI constraint: `// ponytail: <what was simplified> | ceiling: <limit> | upgrade: <trigger>`.
+- If a simplification is deliberately made to keep the plan lean, tag it inline as a YAGNI constraint: `<comment_prefix> ponytail: <what was simplified> | ceiling: <limit> | upgrade: <trigger>` (e.g. `#` Python/Bash/YAML, `--` SQL, `//` JS/TS/Go/Rust, `<!-- -->` HTML).
 
 ### 3. Decompose into Minimal Coherent Tasks
 - Break the work into small, focused tasks with clear file responsibilities and implementation order.

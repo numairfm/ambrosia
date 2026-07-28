@@ -22,7 +22,7 @@ Execute `Finish` through five sequential steps:
 - Load the list of modified files, completed plan tasks, and original Definition of Success.
 
 ### 2. Surface Ponytail Debt Ledger
-- Scan all modified files for inline YAGNI tags: `// ponytail: <what> | ceiling: <limit> | upgrade: <trigger>`.
+- Scan all modified files for `<comment_prefix> ponytail:` tags across touched files regardless of programming language.
 - Aggregate all discovered tags into a visible **Technical Debt Ledger** so shortcuts are explicit, tracked, and never concealed.
 
 ### 3. Sensitive Data & Credentials Safety Scan
@@ -30,6 +30,7 @@ Execute `Finish` through five sequential steps:
 - If sensitive data is detected, halt immediately and alert the user. Do NOT proceed to git options until credentials are removed.
 
 ### 4. Present Git Options & Turn-Based Approval
+- Verify `.ambrosia/` is excluded from git tracking (`.git/info/exclude` or `.gitignore`) to ensure clean repository footprint.
 - Present git status, modified file counts, and a proposed conventional commit message (e.g., `ambrosia(slug): description`).
 - Offer turn-based integration choices (e.g., Commit locally / Push & PR / Keep uncommitted / Park session / Rollback).
 - Wait for explicit user confirmation before executing any git actions.
@@ -46,7 +47,7 @@ Execute `Finish` through five sequential steps:
 1. **User Control Over Git:** Never commit, push, or open a PR without explicit user confirmation.
 2. **Zero Code Edits:** `Finish` MUST NOT modify project source files.
 3. **Mandatory Security Scan:** Always execute the sensitive data scan before presenting commit options.
-4. **No Hidden Debt:** All Discovered `// ponytail:` tags MUST be surfaced in the final report.
+4. **No Hidden Debt:** All discovered `<comment_prefix> ponytail:` tags MUST be surfaced in the final report.
 5. **Log Completion:** Always persist session tag and lifecycle completion metrics to `.ambrosia/logs/ambrosia.log.md`.
 
 ---
@@ -56,7 +57,7 @@ Execute `Finish` through five sequential steps:
 Produce a clean, scannable delivery report covering:
 
 1. **Verification Confirmation:** Re-affirm 100% pass from `Verify`.
-2. **Technical Debt Ledger:** List of all surfaced `// ponytail:` tags (or `"None — no shortcuts tagged"`).
+2. **Technical Debt Ledger:** List of all surfaced `<comment_prefix> ponytail:` tags (or `"None — no shortcuts tagged"`).
 3. **Security Scan Result:** Confirmation of zero sensitive data / credential exposure.
 4. **Git Status & Options:** Proposed commit message and menu of integration choices.
 5. **Lessons Learned:** Summary of distilled engineering patterns appended to `.ambrosia/lessons.md`.

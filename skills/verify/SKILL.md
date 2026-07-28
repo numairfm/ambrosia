@@ -22,9 +22,9 @@ Execute `Verify` through five sequential steps:
 - Load the file modification boundaries, test commands, and interface contracts specified in the plan.
 
 ### 2. Execute Fresh Empirical Verification
-- Run the full project test suite and build verification commands fresh.
+- Run fresh verification commands: run test suite if present; run build commands, linters, or terminal exit codes if no test suite exists or for non-code tasks.
 - Do NOT rely on prior worker assertions — verification MUST execute fresh commands in the current turn.
-- Collect explicit command output logs (test pass counts, build exit codes, runtime assertions).
+- Collect explicit command output logs (test pass counts, linter output, build exit codes, terminal logs).
 
 ### 3. Trace Requirements & Check Boundaries
 - Perform file:line requirement tracing: map every item in the **Definition of Success** to specific passing tests or verified code locations.
@@ -42,7 +42,7 @@ Execute `Verify` through five sequential steps:
 
 ## Standing Rules & Invariants
 
-1. **Iron Law of Verification:** Never claim completion without fresh, empirical evidence (command output/logs) in the current message.
+1. **Iron Law of Verification:** Never claim completion without fresh empirical evidence (test logs, build outputs, linters, exit codes) executed in the current turn.
 2. **Zero File Modifications:** `Verify` MUST NOT create, edit, or delete project source files.
 3. **No Unverified Verbal Assertions:** "Tests pass" without output logs is a verification failure.
 4. **Strict Boundary Checking:** Any unapproved file edits outside plan boundaries fail verification.
@@ -54,7 +54,7 @@ Execute `Verify` through five sequential steps:
 
 Produce a clear, evidence-backed summary covering:
 
-1. **Empirical Evidence Summary:** Command execution outputs, test pass/fail counts, build status.
+1. **Empirical Evidence Summary:** Command execution outputs, test pass/fail counts, build/linter status.
 2. **Requirement Traceability:** Map of original Definition of Success items to verified code/test locations.
 3. **Boundary Verification:** Confirmation of zero unapproved file edits or regressions.
 4. **Gate Result:** `PASSED` (Proceed to `Finish`) OR `FAILED` (Route to `Debug`/`Diverge`).

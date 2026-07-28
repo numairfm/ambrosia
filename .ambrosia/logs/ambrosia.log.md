@@ -8,3 +8,4 @@
 2026-07-28T16:18:50+08:00 [v2a1] [audit] complete — Task 8: skills/checkpoint/SKILL.md implementation (score: 10/10), parallel-safe: yes
 2026-07-28T16:19:55+08:00 [v2a1] [audit] complete — Task 9: skills/diverge/SKILL.md implementation (score: 10/10), parallel-safe: yes
 2026-07-28T16:28:45+08:00 [v2a1] [orient] complete — full codebase orientation written to .ambrosia/orient.md and architecture audit to .ambrosia/architecture.md
+2026-07-28T17:06:00+08:00 [v2a1] [finish] complete — universal cross-repo & polyglot refinements applied to 5 skill files (all <= 70 lines)
